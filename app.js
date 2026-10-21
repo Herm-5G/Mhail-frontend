@@ -362,6 +362,10 @@ function openSettingsModal() {
     catch (e) { alert(e.message); }
   };
   
+      try { await updatePassword(auth.currentUser, newPass); alert("Password updated!"); overlay.remove(); } 
+    catch (e) { alert(e.message); }
+  };
+  
   document.getElementById('btn-del-acc').onclick = async () => {
     if (confirm("Delete account permanently?")) {
       try {
