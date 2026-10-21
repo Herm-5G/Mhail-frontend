@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, addDoc, onSnapshot, orderBy, serverTimestamp, updateDoc, deleteDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// 🔴 ENSURE THIS MATCHES YOUR FIREBASE CONSOLE
 const firebaseConfig = {
   apiKey: "AIzaSyBxfzb0kvBoTErQTkB_UH33-RTMpd0NjNs",
   authDomain: "mhail-fdb0f.firebaseapp.com",
@@ -358,38 +357,4 @@ function openSettingsModal() {
   document.getElementById('btn-save-pass').onclick = async () => {
     const newPass = document.getElementById('set-pass').value;
     if (newPass.length < 6) return alert("6+ chars required");
-        try { await updatePassword(auth.currentUser, newPass); alert("Password updated!"); overlay.remove(); } 
-    catch (e) { alert(e.message); }
-  };
-  
-      try { await updatePassword(auth.currentUser, newPass); alert("Password updated!"); overlay.remove(); } 
-    catch (e) { alert(e.message); }
-  };
-  
-  document.getElementById('btn-del-acc').onclick = async () => {
-    if (confirm("Delete account permanently?")) {
-      try {
-        await deleteDoc(doc(db, "users", currentUser.uid));
-        await deleteDoc(doc(db, "usernames", currentUser.username));
-        await deleteUser(auth.currentUser);
-        window.location.reload();
-      } catch(e) { alert("Log out and back in before deleting."); }
-    }
-  };
-}
-
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const snap = await getDoc(doc(db, "users", user.uid));
-    if (snap.exists()) {
-      currentUser = snap.data();
-      startPresence();
-      renderMain();
-    }
-  } else {
-    currentUser = null;
-    clearInterval(presenceInterval);
-    if (unsubMessages) unsubMessages();
-    renderAuth();
-  }
-});
+    try { await updatePassword(auth.currentUser, newPass); ale
