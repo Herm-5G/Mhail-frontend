@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updatePassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, addDoc, onSnapshot, orderBy, serverTimestamp, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, addDoc, onSnapshot, orderBy, serverTimestamp, updateDoc, deleteDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBxfzb0kvBoTErQTkB_UH33-RTMpd0NjNs",
@@ -15,34 +15,63 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 const appEl = document.getElementById('app');
+
 let currentUser = null;
 let currentChatId = null;
 let currentOtherId = null;
 let unsubMessages = null;
+let presenceInterval = null;
 
-// --- PRESENCE SYSTEM (Online/Offline) ---
-let presenceInterval;
+// --- THEME MANAGEMENT ---
+function initTheme() {
+  const savedTheme = localStorage.getItem('mhail-theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+}
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('mhail-theme', next);
+  renderMain(); // Re-render to swap the moon/sun icon
+}
+
+// Icons
+const ICONS = {
+  back: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>`,
+  video: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>`,
+  call: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.2 2.2z"/></svg>`,
+  dots: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>`,
+  camera: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`,
+  attach: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z"/></svg>`,
+  mic: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>`,
+  send: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>`,
+  tickSingle: `<svg viewBox="0 0 16 16"><path d="M11.071 3.929L5.5 9.5 3.5 7.5l-1.414 1.414L5.5 12.328l6.985-6.985z"/></svg>`,
+  tickDouble: `<svg viewBox="0 0 16 16"><path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/></svg>`,
+  block: `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"/></svg>`,
+  sun: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.39 1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41.39.39 1.03.39 1.41 0l1.06-1.06z"/></svg>`,
+  moon: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>`
+};
+
+initTheme(); // Call immediately
+
 function startPresence() {
   if (!currentUser) return;
   const userRef = doc(db, "users", currentUser.uid);
   const updatePresence = () => setDoc(userRef, { lastSeen: serverTimestamp() }, { merge: true });
   updatePresence();
   clearInterval(presenceInterval);
-  presenceInterval = setInterval(updatePresence, 30000); // Update every 30s
+  presenceInterval = setInterval(updatePresence, 30000);
 }
-function isUserOnline(lastSeenTimestamp) {
-  if (!lastSeenTimestamp) return false;
-  const diff = Date.now() - lastSeenTimestamp.toMillis();
-  return diff < 60000; // Online if active in the last 60 seconds
+function isUserOnline(lastSeen) {
+  if (!lastSeen) return false;
+  return (Date.now() - lastSeen.toMillis()) < 60000;
 }
 
-// --- AUTHENTICATION ---
 function renderAuth() {
   appEl.innerHTML = `
     <div class="auth-wrap"><div class="auth-card">
-      <h1>M-Hail</h1><div class="auth-tagline">Fast, private messaging.</div>
+      <h1>MHail</h1><div class="auth-tagline">Fast, private messaging.</div>
       <div class="tabs">
         <button id="tab-login" class="active">Login</button>
         <button id="tab-reg">Register</button>
@@ -77,9 +106,7 @@ function renderAuth() {
       } else {
         if (username.length < 3) throw new Error("Username too short");
         const usernameRef = doc(db, "usernames", username);
-        const usernameSnap = await getDoc(usernameRef);
-        if (usernameSnap.exists()) throw new Error("Username is already taken!");
-
+        if ((await getDoc(usernameRef)).exists()) throw new Error("Username taken!");
         const userCred = await createUserWithEmailAndPassword(auth, email, pass);
         await setDoc(usernameRef, { uid: userCred.user.uid });
         await setDoc(doc(db, "users", userCred.user.uid), { username, email, displayName: username, uid: userCred.user.uid, lastSeen: serverTimestamp() });
@@ -90,74 +117,94 @@ function renderAuth() {
   };
 }
 
-// --- MAIN CHAT UI ---
-function renderChat() {
+function renderMain() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
   appEl.innerHTML = `
-    <div class="chat-wrap">
-      <aside class="sidebar">
-        <div class="me">
-          <div class="avatar" id="me-av">?</div>
-          <div style="flex:1;font-weight:600" id="me-name">Loading...</div>
-          <button id="profile-btn" style="background:none;border:none;font-size:18px;cursor:pointer">⚙️</button>
-          <button id="logout" style="background:none;border:none;color:red;font-size:13px;margin-left:8px">Logout</button>
+    <div class="app-container">
+      <aside class="sidebar" id="sidebar">
+        <div class="header">
+          <h1>MHail</h1>
+          <div class="header-icons">
+            <button class="icon" id="theme-btn">${isDark ? ICONS.sun : ICONS.moon}</button>
+            <button class="icon" id="settings-btn">${ICONS.dots}</button>
+          </div>
         </div>
-        <div class="search-row"><input id="search" placeholder="Search username..."></div>
-        <ul class="list" id="chats-list"></ul>
+        <div class="search-bar">
+          <input id="search" placeholder="Search...">
+        </div>
+        <div class="filters">
+          <span class="active">All</span><span>Unread</span><span>Favorites</span><span>Groups</span>
+        </div>
+        <ul class="chat-list" id="chats-list"></ul>
+        
+        <button class="fab" id="new-chat-btn">${ICONS.send}</button>
+        
+        <div class="bottom-nav">
+          <div class="nav-item active">${ICONS.dots}<span>Chats</span></div>
+          <div class="nav-item">${ICONS.call}<span>Calls</span></div>
+          <div class="nav-item">${ICONS.camera}<span>Updates</span></div>
+          <div class="nav-item">${ICONS.mic}<span>Tools</span></div>
+        </div>
       </aside>
-      <main class="chat" id="main-chat">
-        <div class="chat-header" id="chat-header" style="display:none">
-           <div style="display:flex;align-items:center">
-             <button id="back-btn">←</button>
-             <span id="chat-name">Chat</span>
-           </div>
-           <button id="clear-chat" style="background:none;border:none;font-size:20px" title="Clear Chat">🗑️</button>
+
+      <main class="chat-window" id="chat-window">
+        <div class="chat-header">
+          <button id="back-btn">${ICONS.back}</button>
+          <div class="avatar-wrap"><div class="avatar" id="other-av"></div></div>
+          <div>
+            <div class="chat-name" id="other-name">Select Chat</div>
+            <div class="chat-status" id="other-status">online</div>
+          </div>
+          <div class="header-actions">
+            <button class="icon">${ICONS.video}</button>
+            <button class="icon">${ICONS.call}</button>
+          </div>
         </div>
-        <div class="messages" id="messages"></div>
-        <form class="composer" id="composer" style="display:none">
-          <input id="msg-input" placeholder="Type a message..." autocomplete="off">
-          <button type="submit">➤</button>
-        </form>
-        <div style="margin:auto;color:#667781;text-align:center;padding:20px" id="empty-state">
-           Select a chat or search for a user
+        <div class="messages" id="messages">
+           <div class="system-msg">🔒 Messages are end-to-end encrypted. No one outside of this chat can read them.</div>
+        </div>
+        <div class="composer">
+          <button class="icon">${ICONS.attach}</button>
+          <div class="input-wrap">
+            <input id="msg-input" placeholder="Message" autocomplete="off">
+          </div>
+          <button class="send-btn" id="send-btn">${ICONS.mic}</button>
         </div>
       </main>
     </div>`;
 
-  document.getElementById('me-name').textContent = currentUser.displayName;
-  document.getElementById('me-av').textContent = currentUser.displayName[0].toUpperCase();
-  document.getElementById('logout').onclick = () => signOut(auth);
-  document.getElementById('profile-btn').onclick = openSettingsModal;
-  document.getElementById('back-btn').onclick = () => document.body.classList.remove('chat-open');
-  document.getElementById('clear-chat').onclick = clearChat;
+  document.getElementById('theme-btn').onclick = toggleTheme;
+  document.getElementById('back-btn').onclick = () => document.getElementById('chat-window').classList.remove('active');
+  document.getElementById('settings-btn').onclick = openSettingsModal;
   
   document.getElementById('search').oninput = async (e) => {
     const val = e.target.value.toLowerCase().trim();
     const list = document.getElementById('chats-list');
     if (val.length < 2) { loadMyChats(); return; }
     
-    try {
-      const q = query(collection(db, "users"), where("username", ">=", val), where("username", "<=", val + '\uf8ff'));
-      const snap = await getDocs(q);
-      list.innerHTML = '';
-      snap.forEach(d => {
-        if (d.id === currentUser.uid) return;
-        const u = d.data();
-        const online = isUserOnline(u.lastSeen);
-        const li = document.createElement('li');
-        li.innerHTML = `<div class="avatar-wrap"><div class="avatar">${u.displayName[0].toUpperCase()}</div><div class="online-dot ${online?'on':'off'}"></div></div>
-          <div class="info"><div class="name">${u.displayName}</div><div class="preview">@${u.username}</div></div>`;
-        li.onclick = () => startChat(u.uid, u.displayName);
-        list.appendChild(li);
-      });
-    } catch(err) { alert("Search error: " + err.message); }
+    const q = query(collection(db, "users"), where("username", ">=", val), where("username", "<=", val + '\uf8ff'));
+    const snap = await getDocs(q);
+    list.innerHTML = '';
+    snap.forEach(d => {
+      if (d.id === currentUser.uid) return;
+      const u = d.data();
+      const li = document.createElement('li');
+      li.className = 'chat-item';
+      li.innerHTML = `<div class="avatar-wrap"><div class="avatar">${u.displayName[0].toUpperCase()}</div></div>
+        <div class="chat-info"><div class="chat-top"><span class="chat-name">${u.displayName}</span></div><div class="chat-bottom"><span class="chat-preview">@${u.username}</span></div></div>`;
+      li.onclick = () => startChat(u.uid, u.displayName);
+      list.appendChild(li);
+    });
   };
 
-  document.getElementById('composer').onsubmit = async (e) => {
-    e.preventDefault();
+  const sendAction = async (e) => {
+    if (e) e.preventDefault();
     const inp = document.getElementById('msg-input');
-    if (!inp.value.trim() || !currentChatId) return;
+    const text = inp.value.trim();
+    if (!text || !currentChatId) return;
+    
     try {
-      const text = inp.value.trim();
       await addDoc(collection(db, "conversations", currentChatId, "messages"), {
         text: text, senderId: currentUser.uid, createdAt: serverTimestamp(), deletedForEveryone: false
       });
@@ -165,223 +212,151 @@ function renderChat() {
         lastMessage: text, lastMessageTime: serverTimestamp(), updatedAt: serverTimestamp()
       }, { merge: true });
       inp.value = '';
-    } catch(err) { alert("Send error: " + err.message); }
+      document.getElementById('send-btn').innerHTML = ICONS.mic;
+    } catch(err) { alert("Error sending: " + err.message); }
   };
+
+  document.getElementById('msg-input').oninput = (e) => {
+    document.getElementById('send-btn').innerHTML = e.target.value.trim() ? ICONS.send : ICONS.mic;
+  };
+  document.getElementById('send-btn').onclick = sendAction;
+  document.getElementById('msg-input').onkeypress = (e) => { if(e.key === 'Enter') sendAction(e); };
 
   loadMyChats();
 }
 
 async function startChat(otherUid, otherName) {
-  try {
-    const participants = [currentUser.uid, otherUid].sort();
-    const chatId = participants.join('_');
-    const chatRef = doc(db, "conversations", chatId);
-    const chatSnap = await getDoc(chatRef);
-    
-    if (!chatSnap.exists()) {
-      await setDoc(chatRef, { participants, updatedAt: serverTimestamp(), lastMessage: "New Chat", clearedBy: [] });
-    }
-    openChat(chatId, otherUid, otherName);
-    document.getElementById('search').value = '';
-  } catch(err) { alert("Could not start chat: " + err.message); }
+  const participants = [currentUser.uid, otherUid].sort();
+  const chatId = participants.join('_');
+  if (!(await getDoc(doc(db, "conversations", chatId))).exists()) {
+    await setDoc(doc(db, "conversations", chatId), { participants, updatedAt: serverTimestamp(), lastMessage: "New Chat", clearedBy: [] });
+  }
+  openChat(chatId, otherUid, otherName);
+  document.getElementById('search').value = '';
 }
 
 async function loadMyChats() {
   const list = document.getElementById('chats-list');
   if (!list) return;
-  try {
-    const q = query(collection(db, "conversations"), where("participants", "array-contains", currentUser.uid));
-    const snap = await getDocs(q);
+  const q = query(collection(db, "conversations"), where("participants", "array-contains", currentUser.uid));
+  const snap = await getDocs(q);
+  
+  if (snap.empty) { list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">No chats yet</div>'; return; }
+  list.innerHTML = '';
+  
+  for (const d of snap.docs) {
+    const data = d.data();
+    if (data.clearedBy && data.clearedBy.includes(currentUser.uid)) continue; 
+    const otherId = data.participants.find(id => id !== currentUser.uid);
+    const otherData = (await getDoc(doc(db, "users", otherId))).data() || { displayName: "Unknown" };
     
-    if (snap.empty) { list.innerHTML = '<div style="padding:20px;text-align:center">No chats yet</div>'; return; }
-    list.innerHTML = '';
-    
-    for (const d of snap.docs) {
-      const data = d.data();
-      if (data.clearedBy && data.clearedBy.includes(currentUser.uid)) continue; 
-
-      const otherId = data.participants.find(id => id !== currentUser.uid);
-      const otherSnap = await getDoc(doc(db, "users", otherId));
-      const otherData = otherSnap.exists() ? otherSnap.data() : { displayName: "Unknown", lastSeen: null };
-      const online = isUserOnline(otherData.lastSeen);
-      
-      const li = document.createElement('li');
-      li.innerHTML = `<div class="avatar-wrap"><div class="avatar">${otherData.displayName[0].toUpperCase()}</div><div class="online-dot ${online?'on':'off'}"></div></div>
-        <div class="info"><div class="name">${otherData.displayName}</div><div class="preview">${data.lastMessage || ''}</div></div>`;
-      li.onclick = () => openChat(d.id, otherId, otherData.displayName);
-      list.appendChild(li);
-    }
-  } catch(err) { console.error(err); }
+    const li = document.createElement('li');
+    li.className = 'chat-item';
+    li.innerHTML = `<div class="avatar-wrap"><div class="avatar">${otherData.displayName[0].toUpperCase()}</div></div>
+      <div class="chat-info">
+        <div class="chat-top"><span class="chat-name">${otherData.displayName}</span><span class="chat-time"></span></div>
+        <div class="chat-bottom"><span class="chat-preview">${data.lastMessage || ''}</span></div>
+      </div>`;
+    li.onclick = () => openChat(d.id, otherId, otherData.displayName);
+    list.appendChild(li);
+  }
 }
 
 async function openChat(chatId, otherId, name) {
   currentChatId = chatId;
   currentOtherId = otherId;
-  document.body.classList.add('chat-open');
-  document.getElementById('empty-state').style.display = 'none';
-  document.getElementById('chat-header').style.display = 'flex';
-  document.getElementById('composer').style.display = 'flex';
-  document.getElementById('chat-name').textContent = name;
-
+  document.getElementById('chat-window').classList.add('active');
+  document.getElementById('other-name').textContent = name;
+  document.getElementById('other-av').textContent = name[0].toUpperCase();
+  
   const msgsEl = document.getElementById('messages');
-  msgsEl.innerHTML = '<div style="text-align:center;color:#888">Loading...</div>';
+  msgsEl.innerHTML = '<div class="system-msg">🔒 Messages are end-to-end encrypted. Only people in this chat can read them.</div>';
   
   if (unsubMessages) unsubMessages();
-  
-  // 1. Mark conversation as read right now
   await updateDoc(doc(db, "conversations", chatId), { [`readAt.${currentUser.uid}`]: serverTimestamp() });
 
-  // 2. Listen to Messages
   const q = query(collection(db, "conversations", chatId, "messages"), orderBy("createdAt", "asc"));
   unsubMessages = onSnapshot(q, async (snap) => {
-    const otherUserSnap = await getDoc(doc(db, "users", otherId));
-    const otherUser = otherUserSnap.data();
-    const convSnap = await getDoc(doc(db, "conversations", chatId));
-    const convData = convSnap.data();
+    const otherUser = (await getDoc(doc(db, "users", otherId))).data();
+    const convData = (await getDoc(doc(db, "conversations", chatId))).data();
     
-    msgsEl.innerHTML = '';
+    document.getElementById('other-status').textContent = isUserOnline(otherUser.lastSeen) ? 'online' : 'offline';
+    
+    msgsEl.innerHTML = '<div class="system-msg">🔒 Messages are end-to-end encrypted. Only people in this chat can read them.</div>';
     snap.forEach(doc => {
       const m = doc.data();
-      if (m.deletedBy && m.deletedBy.includes(currentUser.uid)) return; // Hidden for me
-
+      if (m.deletedBy && m.deletedBy.includes(currentUser.uid)) return; 
+      
       const isMe = m.senderId === currentUser.uid;
       let tickHTML = '';
       
-      // --- READ RECEIPTS LOGIC ---
       if (isMe) {
         const otherReadTime = convData.readAt && convData.readAt[otherId] ? convData.readAt[otherId].toMillis() : 0;
         const msgTime = m.createdAt ? m.createdAt.toMillis() : Date.now();
         
         if (msgTime <= otherReadTime) {
-          tickHTML = `<span class="tick green">✓✓</span>`; // Read
-        } else if (isUserOnline(otherUser.lastSeen)) {
-          tickHTML = `<span class="tick yellow">✓</span>`; // Sent, Online
+          tickHTML = `<span class="tick read">${ICONS.tickDouble}</span>`;
         } else {
-          tickHTML = `<span class="tick red">✓</span>`; // Sent, Offline
+          tickHTML = `<span class="tick">${ICONS.tickSingle}</span>`;
         }
       }
 
-      const textContent = m.deletedForEveryone ? '<i style="color:#888">This message was deleted</i>' : m.text;
+      const isDeleted = m.deletedForEveryone;
+      const textContent = isDeleted ? `${ICONS.block} This message was deleted` : m.text;
+      const timeStr = m.createdAt ? new Date(m.createdAt.toMillis()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
       
       const div = document.createElement('div');
       div.className = `msg-row ${isMe ? 'me' : 'them'}`;
-      div.innerHTML = `<div class="bubble">${textContent}<div class="msg-meta">${tickHTML}</div></div>`;
+      div.innerHTML = `<div class="bubble ${isDeleted?'deleted':''}">${textContent}<div class="msg-meta">${timeStr}${tickHTML}</div></div>`;
       
-      if (!m.deletedForEveryone) {
-        div.querySelector('.bubble').onclick = () => showMessageMenu(chatId, doc.id, isMe, m.text);
+      if (!isDeleted) {
+        div.querySelector('.bubble').onclick = () => showMessageMenu(chatId, doc.id, isMe);
       }
       msgsEl.appendChild(div);
     });
     msgsEl.scrollTop = msgsEl.scrollHeight;
-    
-    // Mark as read again in case new messages arrived while looking
     await updateDoc(doc(db, "conversations", chatId), { [`readAt.${currentUser.uid}`]: serverTimestamp() });
   });
 }
 
-// --- MESSAGE MENU (Delete/Edit) ---
-function showMessageMenu(chatId, msgId, isMe, text) {
+function showMessageMenu(chatId, msgId, isMe) {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
-    <div class="modal">
-      <h3>Message Options</h3>
-      <button class="btn-secondary" onclick="deleteMessage('${chatId}', '${msgId}', false)">🗑️ Delete for Me</button>
-      ${isMe ? `<button class="btn-danger" onclick="deleteMessage('${chatId}', '${msgId}', true)">🚨 Delete for Everyone</button>` : ''}
-      <button class="btn-primary" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+    <div class="modal" style="max-width:300px;text-align:center">
+      <button class="btn-secondary" onclick="deleteMessage('${chatId}', '${msgId}', false)">Delete for Me</button>
+      ${isMe ? `<button class="btn-primary" style="background:var(--danger);color:#fff" onclick="deleteMessage('${chatId}', '${msgId}', true)">Delete for Everyone</button>` : ''}
+      <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
     </div>`;
   document.body.appendChild(overlay);
 }
-
 window.deleteMessage = async (chatId, msgId, forEveryone) => {
   document.querySelector('.modal-overlay').remove();
   const msgRef = doc(db, "conversations", chatId, "messages", msgId);
-  if (forEveryone) {
-    await updateDoc(msgRef, { deletedForEveryone: true, text: "This message was deleted" });
-  } else {
-    await updateDoc(msgRef, { deletedBy: arrayUnion(currentUser.uid) });
-  }
+  if (forEveryone) await updateDoc(msgRef, { deletedForEveryone: true, text: "This message was deleted" });
+  else await updateDoc(msgRef, { deletedBy: arrayUnion(currentUser.uid) });
 };
 
-async function clearChat() {
-  if (!confirm("Clear this chat? This only deletes it for you.")) return;
-  await updateDoc(doc(db, "conversations", currentChatId), { clearedBy: arrayUnion(currentUser.uid) });
-  document.body.classList.remove('chat-open');
-  currentChatId = null;
-  loadMyChats();
-}
-
-// --- SETTINGS MODAL (Profile Management) ---
 function openSettingsModal() {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
   overlay.innerHTML = `
     <div class="modal">
-      <h3>⚙️ Account Settings</h3>
+      <h3>Settings</h3>
       <input id="set-name" placeholder="Display Name" value="${currentUser.displayName}">
       <button class="btn-primary" id="btn-save-name">Save Name</button>
-      <hr style="border:0;border-top:1px solid #ddd;margin:15px 0">
-      <input id="set-pass" type="password" placeholder="New Password (min 6 chars)">
+      <hr style="border-color:var(--border)">
+      <input id="set-pass" type="password" placeholder="New Password">
       <button class="btn-primary" id="btn-save-pass">Update Password</button>
-      <hr style="border:0;border-top:1px solid #ddd;margin:15px 0">
-      <button class="btn-danger" id="btn-del-acc">Delete Account (Permanent)</button>
+      <hr style="border-color:var(--border)">
+      <button class="btn-danger" id="btn-del-acc">Delete Account</button>
       <button class="btn-secondary" onclick="this.closest('.modal-overlay').remove()">Close</button>
     </div>`;
   document.body.appendChild(overlay);
 
   document.getElementById('btn-save-name').onclick = async () => {
     const newName = document.getElementById('set-name').value.trim();
-    if (!newName) return;
-    await updateDoc(doc(db, "users", currentUser.uid), { displayName: newName });
-    currentUser.displayName = newName;
-    document.getElementById('me-name').textContent = newName;
-    document.getElementById('me-av').textContent = newName[0].toUpperCase();
-    alert("Name updated!");
-    overlay.remove();
-  };
-
-  document.getElementById('btn-save-pass').onclick = async () => {
-    const newPass = document.getElementById('set-pass').value;
-    if (newPass.length < 6) return alert("Password must be 6+ chars");
-    try {
-      await updatePassword(auth.currentUser, newPass);
-      alert("Password updated!");
-      overlay.remove();
-    } catch (e) {
-      alert("Error: " + e.message + " (You may need to log out and log back in to change password)");
-    }
-  };
-
-  document.getElementById('btn-del-acc').onclick = async () => {
-    if (!confirm("Are you sure? This will delete your account forever.")) return;
-    try {
-      await deleteDoc(doc(db, "users", currentUser.uid));
-      await deleteDoc(doc(db, "usernames", currentUser.username));
-      await deleteUser(auth.currentUser);
-      alert("Account deleted.");
-      window.location.reload();
-    } catch (e) {
-      alert("Please log out and log back in before deleting your account for security reasons.");
-    }
-  };
-}
-
-// --- INIT ---
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    const snap = await getDoc(doc(db, "users", user.uid));
-    if (snap.exists()) {
-      currentUser = snap.data();
-      startPresence();
-      renderChat();
-    } else {
-      currentUser = { uid: user.uid, displayName: user.email.split('@')[0], username: user.email.split('@')[0] };
-      renderChat();
-    }
-  } else {
-    currentUser = null;
-    clearInterval(presenceInterval);
-    if (unsubMessages) unsubMessages();
-    renderAuth();
-  }
-});
+    if (newName) {
+      await updateDoc(doc(db, "users", currentUser.uid), { displayName: newName });
+      currentUser.displayName = newName;
+      alert("Name updated!")
