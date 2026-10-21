@@ -23,7 +23,7 @@ let currentOtherId = null;
 let unsubMessages = null;
 let presenceInterval = null;
 
-// --- THEME MANAGEMENT ---
+// --- THEME ---
 function initTheme() {
   const savedTheme = localStorage.getItem('mhail-theme') || 'light';
   document.documentElement.setAttribute('data-theme', savedTheme);
@@ -33,10 +33,10 @@ function toggleTheme() {
   const next = current === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', next);
   localStorage.setItem('mhail-theme', next);
-  renderMain(); // Re-render to swap the moon/sun icon
+  renderMain();
 }
 
-// Icons
+// --- ICONS ---
 const ICONS = {
   back: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>`,
   video: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>`,
@@ -53,8 +53,9 @@ const ICONS = {
   moon: `<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-3.03 0-5.5-2.47-5.5-5.5 0-1.82.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>`
 };
 
-initTheme(); // Call immediately
+initTheme();
 
+// --- PRESENCE ---
 function startPresence() {
   if (!currentUser) return;
   const userRef = doc(db, "users", currentUser.uid);
@@ -68,6 +69,7 @@ function isUserOnline(lastSeen) {
   return (Date.now() - lastSeen.toMillis()) < 60000;
 }
 
+// --- AUTH ---
 function renderAuth() {
   appEl.innerHTML = `
     <div class="auth-wrap"><div class="auth-card">
@@ -78,7 +80,7 @@ function renderAuth() {
       </div>
       <form class="form" id="auth-form">
         <input id="email" type="email" placeholder="Email" required>
-        <input id="username" placeholder="Username (for search)" style="display:none" required>
+        <input id="username" placeholder="Username (a-z, 0-9)" style="display:none" required>
         <input id="pass" type="password" placeholder="Password" required>
         <button type="submit" id="submit-btn">Login</button>
         <div class="error" id="err"></div>
@@ -117,6 +119,7 @@ function renderAuth() {
   };
 }
 
+// --- MAIN UI ---
 function renderMain() {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
 
@@ -131,10 +134,7 @@ function renderMain() {
           </div>
         </div>
         <div class="search-bar">
-          <input id="search" placeholder="Search...">
-        </div>
-        <div class="filters">
-          <span class="active">All</span><span>Unread</span><span>Favorites</span><span>Groups</span>
+          <input id="search" placeholder="Search username...">
         </div>
         <ul class="chat-list" id="chats-list"></ul>
         
@@ -154,7 +154,7 @@ function renderMain() {
           <div class="avatar-wrap"><div class="avatar" id="other-av"></div></div>
           <div>
             <div class="chat-name" id="other-name">Select Chat</div>
-            <div class="chat-status" id="other-status">online</div>
+            <div class="chat-status" id="other-status"></div>
           </div>
           <div class="header-actions">
             <button class="icon">${ICONS.video}</button>
@@ -177,6 +177,7 @@ function renderMain() {
   document.getElementById('theme-btn').onclick = toggleTheme;
   document.getElementById('back-btn').onclick = () => document.getElementById('chat-window').classList.remove('active');
   document.getElementById('settings-btn').onclick = openSettingsModal;
+  document.getElementById('new-chat-btn').onclick = () => document.getElementById('search').focus();
   
   document.getElementById('search').oninput = async (e) => {
     const val = e.target.value.toLowerCase().trim();
@@ -191,7 +192,7 @@ function renderMain() {
       const u = d.data();
       const li = document.createElement('li');
       li.className = 'chat-item';
-      li.innerHTML = `<div class="avatar-wrap"><div class="avatar">${u.displayName[0].toUpperCase()}</div></div>
+      li.innerHTML = `<div class="avatar-wrap"><div class="avatar">${u.displayName[0]}</div></div>
         <div class="chat-info"><div class="chat-top"><span class="chat-name">${u.displayName}</span></div><div class="chat-bottom"><span class="chat-preview">@${u.username}</span></div></div>`;
       li.onclick = () => startChat(u.uid, u.displayName);
       list.appendChild(li);
@@ -241,7 +242,7 @@ async function loadMyChats() {
   const q = query(collection(db, "conversations"), where("participants", "array-contains", currentUser.uid));
   const snap = await getDocs(q);
   
-  if (snap.empty) { list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">No chats yet</div>'; return; }
+  if (snap.empty) { list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted)">No chats yet. Search above!</div>'; return; }
   list.innerHTML = '';
   
   for (const d of snap.docs) {
@@ -252,9 +253,9 @@ async function loadMyChats() {
     
     const li = document.createElement('li');
     li.className = 'chat-item';
-    li.innerHTML = `<div class="avatar-wrap"><div class="avatar">${otherData.displayName[0].toUpperCase()}</div></div>
+    li.innerHTML = `<div class="avatar-wrap"><div class="avatar">${otherData.displayName[0]}</div></div>
       <div class="chat-info">
-        <div class="chat-top"><span class="chat-name">${otherData.displayName}</span><span class="chat-time"></span></div>
+        <div class="chat-top"><span class="chat-name">${otherData.displayName}</span></div>
         <div class="chat-bottom"><span class="chat-preview">${data.lastMessage || ''}</span></div>
       </div>`;
     li.onclick = () => openChat(d.id, otherId, otherData.displayName);
@@ -267,7 +268,7 @@ async function openChat(chatId, otherId, name) {
   currentOtherId = otherId;
   document.getElementById('chat-window').classList.add('active');
   document.getElementById('other-name').textContent = name;
-  document.getElementById('other-av').textContent = name[0].toUpperCase();
+  document.getElementById('other-av').textContent = name[0];
   
   const msgsEl = document.getElementById('messages');
   msgsEl.innerHTML = '<div class="system-msg">🔒 Messages are end-to-end encrypted. Only people in this chat can read them.</div>';
@@ -346,7 +347,7 @@ function openSettingsModal() {
       <input id="set-name" placeholder="Display Name" value="${currentUser.displayName}">
       <button class="btn-primary" id="btn-save-name">Save Name</button>
       <hr style="border-color:var(--border)">
-      <input id="set-pass" type="password" placeholder="New Password">
+      <input id="set-pass" type="password" placeholder="New Password (min 6 chars)">
       <button class="btn-primary" id="btn-save-pass">Update Password</button>
       <hr style="border-color:var(--border)">
       <button class="btn-danger" id="btn-del-acc">Delete Account</button>
@@ -359,4 +360,7 @@ function openSettingsModal() {
     if (newName) {
       await updateDoc(doc(db, "users", currentUser.uid), { displayName: newName });
       currentUser.displayName = newName;
-      alert("Name updated!")
+      alert("Name updated!"); overlay.remove(); renderMain();
+    }
+  };
+  document.getElementById('btn-save-pass').onclick 
