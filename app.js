@@ -358,4 +358,34 @@ function openSettingsModal() {
   document.getElementById('btn-save-pass').onclick = async () => {
     const newPass = document.getElementById('set-pass').value;
     if (newPass.length < 6) return alert("6+ chars required");
-    try { awai
+        try { await updatePassword(auth.currentUser, newPass); alert("Password updated!"); overlay.remove(); } 
+    catch (e) { alert(e.message); }
+  };
+  
+  document.getElementById('btn-del-acc').onclick = async () => {
+    if (confirm("Delete account permanently?")) {
+      try {
+        await deleteDoc(doc(db, "users", currentUser.uid));
+        await deleteDoc(doc(db, "usernames", currentUser.username));
+        await deleteUser(auth.currentUser);
+        window.location.reload();
+      } catch(e) { alert("Log out and back in before deleting."); }
+    }
+  };
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    const snap = await getDoc(doc(db, "users", user.uid));
+    if (snap.exists()) {
+      currentUser = snap.data();
+      startPresence();
+      renderMain();
+    }
+  } else {
+    currentUser = null;
+    clearInterval(presenceInterval);
+    if (unsubMessages) unsubMessages();
+    renderAuth();
+  }
+});
