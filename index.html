@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Ehdra</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  #error-box { display: none; position: fixed; top: 0; left: 0; right: 0; background: #ea4335; color: white; padding: 20px; font-family: monospace; font-size: 14px; z-index: 9999; word-break: break-all; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="error-box"></div>
+
+<!-- THESE ARE THE MISSING HIDDEN INPUTS -->
+<input type="file" id="profile-upload" accept="image/*" style="display:none">
+<input type="file" id="chat-upload" accept="image/*" style="display:none">
+
+<script>
+  window.onerror = function(msg, url, line) {
+    const box = document.getElementById('error-box');
+    box.style.display = 'block';
+    box.innerHTML = `<b>Error:</b> ${msg}<br><b>Line:</b> ${line}`;
+  };
+</script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
