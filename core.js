@@ -1,4 +1,4 @@
-const API_URL = 'https://mhail.onrender.com'
+const API_URL = 'https://corsproxy.io/?https://mhail.onrender.com'
 const TOKEN_KEY = 'mhail_token'
 const USER_KEY = 'mhail_user'
 
