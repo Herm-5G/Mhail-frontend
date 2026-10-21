@@ -21,6 +21,7 @@ let currentUser = null;
 let currentChatId = null;
 let unsubMessages = null;
 
+// --- AUTHENTICATION ---
 function renderAuth() {
   appEl.innerHTML = `
     <div class="auth-wrap"><div class="auth-card">
@@ -67,6 +68,7 @@ function renderAuth() {
   };
 }
 
+// --- CHAT UI ---
 function renderChat() {
   appEl.innerHTML = `
     <div class="chat-wrap">
@@ -101,75 +103,87 @@ function renderChat() {
   document.getElementById('me-av').textContent = currentUser.displayName[0].toUpperCase();
   document.getElementById('logout').onclick = () => signOut(auth);
 
+  // Search Users
   document.getElementById('search').oninput = async (e) => {
     const val = e.target.value.toLowerCase().trim();
     const list = document.getElementById('chats-list');
     if (val.length < 2) { loadMyChats(); return; }
     
-    const q = query(collection(db, "users"), where("username", ">=", val), where("username", "<=", val + '\uf8ff'));
-    const snap = await getDocs(q);
-    list.innerHTML = '';
-    snap.forEach(d => {
-      if (d.id === currentUser.uid) return;
-      const u = d.data();
-      list.innerHTML += `<li onclick="startChat('${u.uid}', '${u.displayName}')">
-        <div class="avatar">${u.displayName[0].toUpperCase()}</div>
-        <div class="info"><div class="name">${u.displayName}</div><div class="preview">@${u.username}</div></div>
-      </li>`;
-    });
+    try {
+      const q = query(collection(db, "users"), where("username", ">=", val), where("username", "<=", val + '\uf8ff'));
+      const snap = await getDocs(q);
+      list.innerHTML = '';
+      snap.forEach(d => {
+        if (d.id === currentUser.uid) return;
+        const u = d.data();
+        const li = document.createElement('li');
+        li.innerHTML = `<div class="avatar">${u.displayName[0].toUpperCase()}</div>
+          <div class="info"><div class="name">${u.displayName}</div><div class="preview">@${u.username}</div></div>`;
+        li.onclick = () => startChat(u.uid, u.displayName);
+        list.appendChild(li);
+      });
+    } catch(err) { alert("Search error: " + err.message); }
   };
 
+  // Send Message
   document.getElementById('composer').onsubmit = async (e) => {
     e.preventDefault();
     const inp = document.getElementById('msg-input');
     if (!inp.value.trim() || !currentChatId) return;
-    await addDoc(collection(db, "conversations", currentChatId, "messages"), {
-      text: inp.value.trim(), senderId: currentUser.uid, createdAt: serverTimestamp()
-    });
-    inp.value = '';
+    try {
+      await addDoc(collection(db, "conversations", currentChatId, "messages"), {
+        text: inp.value.trim(), senderId: currentUser.uid, createdAt: serverTimestamp()
+      });
+      inp.value = '';
+    } catch(err) { alert("Send error: " + err.message); }
   };
 
   document.getElementById('back-btn').onclick = () => document.body.classList.remove('chat-open');
   loadMyChats();
 }
 
-window.startChat = async (otherUid, otherName) => {
-  const participants = [currentUser.uid, otherUid].sort();
-  const chatId = participants.join('_');
-  const chatRef = doc(db, "conversations", chatId);
-  const chatSnap = await getDoc(chatRef);
-  
-  if (!chatSnap.exists()) {
-    await setDoc(chatRef, { participants, updatedAt: serverTimestamp() });
-  }
-  openChat(chatId, otherName);
-  document.getElementById('search').value = '';
-  loadMyChats();
-};
+async function startChat(otherUid, otherName) {
+  try {
+    const participants = [currentUser.uid, otherUid].sort();
+    const chatId = participants.join('_');
+    const chatRef = doc(db, "conversations", chatId);
+    const chatSnap = await getDoc(chatRef);
+    
+    if (!chatSnap.exists()) {
+      await setDoc(chatRef, { participants, updatedAt: serverTimestamp() });
+    }
+    openChat(chatId, otherName);
+    document.getElementById('search').value = '';
+    loadMyChats();
+  } catch(err) { alert("Could not start chat: " + err.message); }
+}
 
 async function loadMyChats() {
   const list = document.getElementById('chats-list');
   if (!list) return;
-  const q = query(collection(db, "conversations"), where("participants", "array-contains", currentUser.uid));
-  const snap = await getDocs(q);
-  
-  if (snap.empty) { list.innerHTML = '<div style="padding:20px;color:#667781;text-align:center">No chats yet. Search above!</div>'; return; }
-  
-  list.innerHTML = '';
-  for (const d of snap.docs) {
-    const data = d.data();
-    const otherId = data.participants.find(id => id !== currentUser.uid);
-    const otherSnap = await getDoc(doc(db, "users", otherId));
-    const otherName = otherSnap.exists() ? otherSnap.data().displayName : "Unknown";
+  try {
+    const q = query(collection(db, "conversations"), where("participants", "array-contains", currentUser.uid));
+    const snap = await getDocs(q);
     
-    list.innerHTML += `<li onclick="openChat('${d.id}', '${otherName}')">
-      <div class="avatar">${otherName[0].toUpperCase()}</div>
-      <div class="info"><div class="name">${otherName}</div></div>
-    </li>`;
-  }
+    if (snap.empty) { list.innerHTML = '<div style="padding:20px;color:#667781;text-align:center">No chats yet. Search above!</div>'; return; }
+    
+    list.innerHTML = '';
+    for (const d of snap.docs) {
+      const data = d.data();
+      const otherId = data.participants.find(id => id !== currentUser.uid);
+      const otherSnap = await getDoc(doc(db, "users", otherId));
+      const otherName = otherSnap.exists() ? otherSnap.data().displayName : "Unknown";
+      
+      const li = document.createElement('li');
+      li.innerHTML = `<div class="avatar">${otherName[0].toUpperCase()}</div>
+        <div class="info"><div class="name">${otherName}</div></div>`;
+      li.onclick = () => openChat(d.id, otherName);
+      list.appendChild(li);
+    }
+  } catch(err) { alert("Load chats error: " + err.message); }
 }
 
-window.openChat = (chatId, name) => {
+function openChat(chatId, name) {
   currentChatId = chatId;
   document.body.classList.add('chat-open');
   document.getElementById('empty-state').style.display = 'none';
@@ -182,27 +196,36 @@ window.openChat = (chatId, name) => {
   
   if (unsubMessages) unsubMessages();
   
-  const q = query(collection(db, "conversations", chatId, "messages"), orderBy("createdAt", "asc"));
-  unsubMessages = onSnapshot(q, (snap) => {
-    msgsEl.innerHTML = '';
-    snap.forEach(doc => {
-      const m = doc.data();
-      const isMe = m.senderId === currentUser.uid;
-      msgsEl.innerHTML += `<div class="msg-row ${isMe ? 'me' : 'them'}"><div class="bubble">${m.text}</div></div>`;
+  try {
+    const q = query(collection(db, "conversations", chatId, "messages"), orderBy("createdAt", "asc"));
+    unsubMessages = onSnapshot(q, (snap) => {
+      msgsEl.innerHTML = '';
+      snap.forEach(doc => {
+        const m = doc.data();
+        const isMe = m.senderId === currentUser.uid;
+        msgsEl.innerHTML += `<div class="msg-row ${isMe ? 'me' : 'them'}"><div class="bubble">${m.text}</div></div>`;
+      });
+      msgsEl.scrollTop = msgsEl.scrollHeight;
+    }, (error) => {
+      alert("Snapshot error: " + error.message);
     });
-    msgsEl.scrollTop = msgsEl.scrollHeight;
-  });
-};
+  } catch (err) { alert("Chat error: " + err.message); }
+}
 
+// --- INIT ---
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    const snap = await getDoc(doc(db, "users", user.uid));
-    if (snap.exists()) {
-      currentUser = snap.data();
+    try {
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists()) {
+        currentUser = snap.data();
+      } else {
+        // Fallback if user document was deleted or didn't save
+        currentUser = { uid: user.uid, displayName: user.email.split('@')[0], username: user.email.split('@')[0] };
+      }
       renderChat();
-    } else {
-      currentUser = { uid: user.uid, displayName: user.email.split('@')[0], username: user.email.split('@')[0] };
-      renderChat();
+    } catch (err) {
+      alert("Auth error: " + err.message);
     }
   } else {
     currentUser = null;
