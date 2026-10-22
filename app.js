@@ -1324,3 +1324,13 @@ onAuthStateChanged(auth, async (user) => {
     renderAuth();
   }
 });
+// Auto-reload when a new Service Worker takes over
+if ('serviceWorker' in navigator) {
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) {
+      refreshing = true;
+      window.location.reload();
+    }
+  });
+}
