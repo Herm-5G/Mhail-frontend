@@ -8,7 +8,6 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#00f3ff">
 <link rel="apple-touch-icon" href="https://res.cloudinary.com/rirfqxoz/image/upload/IMG-20261022-WA0000.jpg">
-
 <style>
   #error-box { display: none; position: fixed; top: 0; left: 0; right: 0; background: #ea4335; color: white; padding: 20px; font-family: monospace; font-size: 14px; z-index: 9999; word-break: break-all; }
 </style>
@@ -28,8 +27,13 @@
     box.style.display = 'block';
     box.innerHTML = `<b>Error:</b> ${msg}<br><b>Line:</b> ${line}`;
   };
+
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
+    navigator.serviceWorker.register('sw.js').then(() => {
+      console.log("Service Worker Registered");
+    }).catch((err) => {
+      console.log("Service Worker Failed", err);
+    });
   }
 </script>
 <script type="module" src="app.js"></script>
