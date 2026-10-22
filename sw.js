@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ehdra-v3';
+const CACHE_NAME = 'mofie-v3'; // Changed version number
 const ASSETS = [
   './',
   './index.html',
@@ -7,15 +7,10 @@ const ASSETS = [
   './manifest.json'
 ];
 
-// Install Service Worker
 self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
-  );
-  self.skipWaiting();
+  self.skipWaiting(); // Force the new service worker to take over immediately
 });
 
-// Activate Service Worker
 self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) => {
@@ -24,13 +19,24 @@ self.addEventListener('activate', (e) => {
       );
     })
   );
+  self.clients.claim();
 });
 
-// Fetch Assets - THIS IS THE CRITICAL PART
+// NETWORK FIRST STRATEGY
 self.addEventListener('fetch', (e) => {
   e.respondWith(
-    caches.match(e.request).then((response) => {
-      return response || fetch(e.request);
-    })
+    fetch(e.request)
+      .then((response) => {
+        // If we get a valid response from GitHub, save it to cache and return it
+        if (response && response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, responseClone));
+        }
+        return response;
+      })
+      .catch(() => {
+        // If the phone is offline, serve the cached version
+        return caches.match(e.request);
+      })
   );
 });
