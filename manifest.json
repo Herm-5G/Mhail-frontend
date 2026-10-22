@@ -7,15 +7,14 @@
   "theme_color": "#00f3ff",
   "description": "Fast, secure, customizable messaging.",
   "icons": [
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/5968/5968841.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/5968/5968841.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+  {
+    "src": "https://res.cloudinary.com/rirfqxoz/image/upload/IMG-20261022-WA0000.jpg",
+    "sizes": "192x192",
+    "type": "image/jpeg"
+  },
+  {
+    "src": "https://res.cloudinary.com/rirfqxoz/image/upload/IMG-20261022-WA0000.jpg",
+    "sizes": "512x512",
+    "type": "image/jpeg"
+  }
   ]
-}
