@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ehdra-v2';
+const CACHE_NAME = 'ehdra-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -10,9 +10,7 @@ const ASSETS = [
 // Install Service Worker
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
   self.skipWaiting();
 });
@@ -28,7 +26,7 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-// Fetch Assets
+// Fetch Assets - THIS IS THE CRITICAL PART
 self.addEventListener('fetch', (e) => {
   e.respondWith(
     caches.match(e.request).then((response) => {
