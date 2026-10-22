@@ -6,7 +6,6 @@
   "display": "standalone",
   "background_color": "#09090e",
   "theme_color": "#00f3ff",
-  "description": "Fast, secure, customizable messaging.",
   "icons": [
     {
       "src": "https://res.cloudinary.com/rirfqxoz/image/upload/IMG-20261022-WA0000.jpg",
