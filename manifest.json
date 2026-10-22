@@ -1,6 +1,6 @@
 {
-  "name": "Ehdra",
-  "short_name": "Ehdra",
+  "name": "Mofie",
+  "short_name": "Mofie",
   "start_url": "/Mhail-frontend/",
   "scope": "/Mhail-frontend/",
   "display": "standalone",
@@ -8,12 +8,12 @@
   "theme_color": "#00f3ff",
   "icons": [
     {
-      "src": "https://res.cloudinary.com/rirfqxoz/image/upload/IMG-20261022-WA0000.jpg",
+      "src": "https://res.cloudinary.com/rirfqxoz/image/upload/icon.jpg",
       "sizes": "192x192",
       "type": "image/jpeg"
     },
     {
-      "src": "https://res.cloudinary.com/rirfqxoz/image/upload/IMG-20261022-WA0000.jpg",
+      "src": "https://res.cloudinary.com/rirfqxoz/image/upload/icon.jpg",
       "sizes": "512x512",
       "type": "image/jpeg"
     }
