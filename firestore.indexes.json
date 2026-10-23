@@ -1,0 +1,15 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "messages",
+      "queryScope": "COLLECTION_GROUP",
+      "fields": [{ "fieldPath": "expireAt", "order": "ASCENDING" }]
+    },
+    {
+      "collectionGroup": "statuses",
+      "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "expireAt", "order": "ASCENDING" }]
+    }
+  ],
+  "fieldOverrides": []
+}
