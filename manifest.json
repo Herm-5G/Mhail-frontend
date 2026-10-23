@@ -1,0 +1,25 @@
+{
+  "name": "Mofie",
+  "short_name": "Mofie",
+  "description": "Pure, Fast, Convenient",
+  "id": "/Mhail-frontend/",
+  "start_url": "/Mhail-frontend/",
+  "scope": "/Mhail-frontend/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b141a",
+  "theme_color": "#111b21",
+  "icons": [
+    { "src": "https://res.cloudinary.com/rirfqxoz/image/upload/icon.jpg", "sizes": "192x192", "type": "image/jpeg" },
+    { "src": "https://res.cloudinary.com/rirfqxoz/image/upload/icon.jpg", "sizes": "512x512", "type": "image/jpeg" },
+    { "src": "https://res.cloudinary.com/rirfqxoz/image/upload/icon.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Chats", "url": "/Mhail-frontend/?tab=chats" },
+    { "name": "Contacts", "url": "/Mhail-frontend/?tab=contacts" },
+    { "name": "Status", "url": "/Mhail-frontend/?tab=status" }
+  ],
+  "url_handlers": [
+    { "origin": "https://herm-5g.github.io" }
+  ]
+}
