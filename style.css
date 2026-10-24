@@ -1,0 +1,3434 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   MOFIE — Modern WhatsApp Green · Premium UI
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ═══════════ VARIABLES ═══════════ */
+:root {
+  /* Dark Theme (Default) */
+  --bg-main: #0B141A;
+  --bg-panel: #111B21;
+  --header: #202C33;
+  --hover: #202C33;
+  --surface-elevated: #2A3942;
+
+  --text: #E9EDEF;
+  --text-muted: #AEBAC1;
+  --text-dim: #8696A0;
+
+  --border: #2A3942;
+  --border-light: rgba(255, 255, 255, 0.08);
+
+  --overlay: rgba(11, 20, 26, 0.85);
+
+  /* Accent Colors (WhatsApp Green) */
+  --user-accent-1: #00A884; 
+  --user-accent-2: #25D366; 
+  --user-accent-3: #00D2A0; 
+  --user-accent-text: #FFFFFF;
+  --user-accent-tint: rgba(0, 168, 132, 0.15);
+
+  /* Chat Bubbles */
+  --bubble-me-bg: #005C4B; 
+  --bubble-me-text: #E9EDEF;
+  --bubble-them-bg: #202C33;
+  --bubble-them-text: #E9EDEF;
+  --bubble-me-meta: rgba(233, 237, 239, 0.6);
+  --bubble-them-meta: #8696A0;
+  --bubble-me-tick: #8696A0;
+  --bubble-me-tick-read: #53BDEB; 
+
+  /* Reply UI */
+  --reply-bg: rgba(0, 168, 132, 0.12);
+  --reply-border: #00A884;
+
+  /* Shapes */
+  --radius-xl: 28px;
+  --radius-lg: 20px;
+  --radius: 16px;
+  --radius-sm: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ═══ LIGHT THEME (Official WhatsApp Colors) ═══ */
+[data-theme="light"] {
+  /* Backgrounds */
+  --bg-main: #EFEAE2;       /* Beige chat background */
+  --bg-panel: #F0F2F5;      /* Replaces the white panels (Header, Chat List, Bottom Nav) with soft grey */
+  --header: #F0F2F5;        /* Top header bar */
+  --hover: #E1E8EB;         /* Hover color */
+  --surface-elevated: #FFFFFF;
+
+  /* Text */
+  --text: #111B21;          
+  --text-muted: #667781;    
+  --text-dim: #8696A0;      
+
+  /* Borders */
+  --border: #E9EDEF;        
+  --border-light: rgba(0, 0, 0, 0.06);
+
+  /* Overlay */
+  --overlay: rgba(11, 20, 26, 0.45);
+
+  /* ⚠️ ACCENT COLORS - Force WhatsApp Green to override cyan bug */
+/* Accent Colors */
+--user-accent-1: #008069; 
+--user-accent-2: #00A884;
+  /* Chat Bubbles */
+  --bubble-me-bg: #D9FDD3;  
+  --bubble-me-text: #111B21;
+  --bubble-them-bg: #FFFFFF;
+  --bubble-them-text: #111B21;
+  --bubble-me-meta: rgba(17, 27, 33, 0.6);
+  --bubble-them-meta: #667781;
+  --bubble-me-tick: #8696A0;
+  --bubble-me-tick-read: #53BDEB; 
+
+  /* Reply UI */
+  --reply-bg: rgba(0, 128, 105, 0.08);
+  --reply-border: #008069;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+/* ═══ NEON THEME ═══ */
+[data-theme="neon"] {
+  --bg-main: #030409;
+  --bg-panel: #0a0d18;
+  --header: #101425;
+  --border: rgba(0, 168, 132, 0.25);
+  --user-accent-1: #00A884;
+  --bubble-me-bg: rgba(0, 168, 132, 0.18);
+  --bubble-them-bg: rgba(0, 168, 132, 0.1);
+  --bubble-me-border: #00A884;
+  --bubble-them-border: #008069;
+}
+
+/* ═══════════ BASE & RESET ═══════════ */
+* { box-sizing: border-box; }
+html, body {
+  height: 100%; margin: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-main); color: var(--text);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility; overflow: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+button { cursor: pointer; font: inherit; color: inherit; background: none; border: none; outline: none; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+input, textarea { font: inherit; color: inherit; }
+ul { list-style: none; padding: 0; margin: 0; }
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(134, 150, 160, 0.4); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Performance optimizations */
+.chat-item { content-visibility: auto; contain-intrinsic-size: 0 76px; }
+.msg-row { content-visibility: auto; contain-intrinsic-size: 0 60px; }
+
+/* ═══════════ ANIMATIONS ═══════════ */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes popIn { 0% { transform: scale(0.9); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+@keyframes spin360 { to { transform: rotate(360deg); } }
+@keyframes replySlide { from { transform: translateY(10px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes sendFlash { 0% { transform: scale(1); } 40% { transform: scale(0.85); } 100% { transform: scale(1); } }
+@keyframes messageFlash { 0%, 100% { background: transparent; } 20%, 80% { background: rgba(0, 168, 132, 0.15); } }
+@keyframes flap { 0% { transform: scaleX(1); } 100% { transform: scaleX(0.4) rotate(5deg); } }
+
+/* ═══════════ TOAST ═══════════ */
+.toast {
+  background: var(--surface-elevated); color: var(--text);
+  padding: 12px 20px; border-radius: var(--radius-lg);
+  border: 1px solid var(--border-light); box-shadow: var(--shadow-lg);
+  font-size: 14px; font-weight: 500; max-width: 90vw; text-align: center;
+  transform: translateY(140px); opacity: 0; transition: transform 0.4s var(--ease), opacity 0.3s;
+  pointer-events: auto;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ═══════════ LOGO & AUTH ═══════════ */
+.logo-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+.butterfly-svg { width: 64px; height: 64px; fill: var(--user-accent-1); margin-bottom: 14px; animation: flap 0.8s infinite alternate ease-in-out; }
+.logo-text { font-size: 36px; font-weight: 800; margin: 0; letter-spacing: -1px; color: var(--user-accent-1); }
+
+.auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg-main); }
+.auth-card { width: 100%; max-width: 400px; background: var(--bg-panel); border-radius: var(--radius-xl); padding: 36px 28px; box-shadow: var(--shadow-lg); border: 1px solid var(--border-light); position: relative; overflow: hidden; animation: fadeIn 0.4s var(--ease); }
+.auth-tagline { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; text-align: center; font-weight: 500; }
+.tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg-main); padding: 4px; border-radius: var(--radius-lg); }
+.tabs button { flex: 1; padding: 12px; border-radius: var(--radius); color: var(--text-muted); font-weight: 600; font-size: 14px; transition: 0.25s var(--ease); }
+.tabs button.active { background: var(--bg-panel); color: var(--user-accent-1); box-shadow: var(--shadow-sm); }
+
+.form { display: flex; flex-direction: column; gap: 14px; }
+.form input { padding: 16px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg-main); outline: none; color: var(--text); transition: border-color 0.2s, box-shadow 0.2s; width: 100%; font-size: 15px; }
+.form input::placeholder { color: var(--text-dim); }
+.form input:focus { border-color: var(--user-accent-1); box-shadow: 0 0 0 3px var(--user-accent-tint); }
+.form input.valid { border-color: #10b981; }
+.form input.invalid { border-color: #ef4444; }
+.form button[type="submit"] { padding: 16px; border-radius: var(--radius-lg); background: var(--user-accent-1); color: var(--user-accent-text); font-weight: 700; margin-top: 10px; transition: 0.2s var(--ease); border: none; font-size: 16px; box-shadow: 0 4px 12px var(--user-accent-tint); }
+.form button[type="submit"]:active:not(:disabled) { transform: scale(0.98); }
+.form button[type="submit"]:disabled { opacity: 0.6; cursor: not-allowed; }
+.field-msg { font-size: 12px; margin-top: 6px; padding-left: 6px; min-height: 16px; font-weight: 500; }
+.field-msg.valid { color: #10b981; }
+.field-msg.invalid { color: #ef4444; }
+.error { color: #ef4444; font-size: 13px; text-align: center; min-height: 18px; margin-top: 10px; font-weight: 600; }
+.auth-status { display: none; margin-top: 16px; font-size: 13px; text-align: center; font-weight: 600; }
+.auth-status.show { display: block; }
+.auth-status.info { color: var(--user-accent-2); }
+.auth-status.success { color: #10b981; }
+.auth-status.error { color: #ef4444; }
+.splash-loader { width: 44px; height: 44px; border: 3px solid var(--border); border-top-color: var(--user-accent-1); border-radius: 50%; margin: 24px auto; animation: spin360 0.8s linear infinite; }
+
+/* ═══════════ APP LAYOUT ═══════════ */
+.app-container { display: block; height: 100vh; height: 100dvh; position: relative; overflow: hidden; background: var(--bg-main); }
+.app-view { display: none; width: 100%; height: calc(100% - 72px); overflow-y: auto; padding-bottom: 20px; -webkit-overflow-scrolling: touch; }
+.app-view.active { display: block; animation: fadeIn 0.25s var(--ease); }
+#view-chats { position: relative; overflow: hidden; padding-bottom: 0; }
+
+/* ═══════════ BOTTOM NAV ═══════════ */
+.bottom-nav { position: absolute; bottom: 0; left: 0; right: 0; height: 72px; background: var(--bg-panel); border-top: 1px solid var(--border-light); display: flex; justify-content: space-around; align-items: center; z-index: 50; padding: 0 24px; padding-bottom: env(safe-area-inset-bottom); box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05); }
+.bottom-nav-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dim); font-size: 11px; font-weight: 600; gap: 4px; flex: 1; height: 60px; transition: 0.25s var(--ease); border-radius: var(--radius-lg); position: relative; }
+.bottom-nav-btn::after { content: ''; position: absolute; top: -1px; left: 50%; transform: translateX(-50%) scaleX(0); width: 32px; height: 3px; background: var(--user-accent-1); border-radius: 0 0 4px 4px; transition: transform 0.3s var(--ease); }
+.bottom-nav-btn.active { color: var(--user-accent-1); }
+.bottom-nav-btn.active::after { transform: translateX(-50%) scaleX(1); }
+.bottom-nav-btn svg { width: 24px; height: 24px; fill: currentColor; transition: transform 0.25s var(--ease); }
+.bottom-nav-btn.active svg { transform: scale(1.1); }
+.bottom-nav-btn:active svg { transform: scale(0.9); }
+
+/* ═══════════ SIDEBAR / CHAT LIST ═══════════ */
+.sidebar { width: 100%; height: 100%; display: flex; flex-direction: column; background: var(--bg-panel); position: absolute; top: 0; left: 0; z-index: 10; }
+.header { background: var(--bg-panel); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; min-height: 68px; flex-shrink: 0; border-bottom: 1px solid var(--border-light); }
+.header h1 { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.5px; color: var(--user-accent-1); }
+.header-icons { display: flex; gap: 16px; align-items: center; }
+.icon { width: 24px; height: 24px; fill: var(--text-muted); cursor: pointer; transition: fill 0.2s, transform 0.2s; }
+.icon:hover { fill: var(--user-accent-1); }
+.icon:active { transform: scale(0.9); }
+
+.search-row { display: flex; gap: 12px; padding: 12px 20px; align-items: center; background: var(--bg-panel); flex-shrink: 0; }
+.search-row input { flex: 1; background: var(--bg-main); border: 1px solid transparent; border-radius: var(--radius-lg); padding: 12px 16px; color: var(--text); outline: none; font-size: 14px; min-width: 0; transition: 0.2s var(--ease); }
+.search-row input::placeholder { color: var(--text-dim); }
+.search-row input:focus { border-color: var(--user-accent-1); box-shadow: 0 0 0 3px var(--user-accent-tint); }
+
+.tabs-row { display: flex; gap: 8px; padding: 4px 20px 16px; overflow-x: auto; white-space: nowrap; background: var(--bg-panel); scrollbar-width: none; }
+.tabs-row::-webkit-scrollbar { display: none; }
+.tab-btn { padding: 8px 16px; border-radius: var(--radius-lg); background: var(--bg-main); color: var(--text-muted); font-size: 13px; font-weight: 600; border: 1px solid transparent; transition: 0.25s var(--ease); flex-shrink: 0; }
+.tab-btn.active { background: var(--user-accent-tint); color: var(--user-accent-1); border-color: var(--user-accent-1); }
+
+.chat-list { flex: 1; overflow-y: auto; padding-bottom: 100px; }
+.chat-item { display: flex; align-items: center; gap: 16px; padding: 14px 20px; cursor: pointer; transition: background 0.15s var(--ease); position: relative; border-bottom: 1px solid var(--border-light); }
+.chat-item:hover { background: var(--bg-main); }
+.chat-item.pinned { background: var(--user-accent-tint); }
+.chat-item.pinned::before { content: ''; position: absolute; left: 0; top: 20%; bottom: 20%; width: 4px; background: var(--user-accent-1); border-radius: 0 4px 4px 0; }
+
+.explore-fab { position: absolute; bottom: 24px; right: 20px; height: 52px; padding: 0 24px; border-radius: 26px; background: var(--user-accent-1); color: var(--user-accent-text); display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; z-index: 15; transition: 0.2s var(--ease); border: none; box-shadow: 0 8px 24px var(--user-accent-tint); }
+.explore-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 28px var(--user-accent-tint); }
+.explore-fab.active { background: var(--bg-main); color: var(--text); border: 1px solid var(--border); box-shadow: none; }
+.explore-fab svg { width: 18px; height: 18px; fill: currentColor; }
+
+.contacts-hint { padding: 24px 18px; font-size: 14px; color: var(--text-muted); text-align: center; line-height: 1.6; }
+.contacts-hint button { display: block; margin: 16px auto 0; padding: 13px 26px; border-radius: var(--radius-lg); background: var(--user-accent-1); color: var(--user-accent-text); font-weight: 700; width: auto; border: none; }
+
+/* ═══════════ EMPTY STATE ═══════════ */
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 20px; text-align: center; animation: fadeIn 0.35s var(--ease); }
+.empty-state-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.8; }
+.empty-state h3 { margin: 0 0 8px; font-size: 18px; font-weight: 700; color: var(--text); }
+.empty-state p { margin: 0; font-size: 14px; color: var(--text-muted); line-height: 1.5; max-width: 300px; }
+
+/* ═══════════ AVATARS ═══════════ */
+.avatar-wrap { position: relative; width: 52px; height: 52px; flex-shrink: 0; border-radius: 50%; border: 2px solid transparent; transition: border-color 0.2s, transform 0.2s var(--ease); }
+.avatar-wrap.has-status { border-color: var(--user-accent-1); }
+.avatar { width: 100%; height: 100%; border-radius: 50%; background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 18px; color: var(--user-accent-1); text-transform: uppercase; overflow: hidden; }
+[data-theme="light"] .avatar { background: #E1E8EB; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+.status-dot { position: absolute; bottom: 0px; right: 0px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--bg-panel); z-index: 2; }
+.status-dot.online { background: var(--user-accent-2); }
+.status-dot.offline { background: #6b7280; }
+
+.chat-info { flex: 1; min-width: 0; }
+.chat-top { display: flex; justify-content: space-between; margin-bottom: 4px; align-items: center; gap: 8px; }
+.chat-name { font-size: 16px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-bottom { display: flex; justify-content: space-between; align-items: center; }
+.chat-preview { font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-top-icons { display: inline-flex; gap: 4px; margin-left: 6px; color: var(--text-dim); }
+.chat-top-icons svg { width: 14px; height: 14px; fill: currentColor; }
+.unread-badge { background: var(--user-accent-2); color: #fff; font-size: 11px; font-weight: 700; min-width: 22px; height: 22px; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 0 7px; box-shadow: 0 2px 6px rgba(37, 211, 102, 0.4); }
+
+/* ═══════════ CHAT WINDOW ═══════════ */
+.chat-window { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; z-index: 20; transform: translateX(100%); transition: transform 0.32s var(--ease); background: var(--bg-main); overflow: hidden; }
+.chat-window.active { transform: translateX(0); }
+.chat-header { background: var(--bg-panel); padding: 10px 16px; display: flex; align-items: center; gap: 12px; min-height: 68px; border-bottom: 1px solid var(--border-light); flex-shrink: 0; z-index: 10; }
+.chat-header .avatar-wrap { width: 42px; height: 42px; }
+.chat-header .chat-name { font-size: 16.5px; font-weight: 600; color: var(--text); }
+.chat-header .chat-status { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; transition: color 0.2s; }
+.chat-header .chat-status.typing-active { color: var(--user-accent-1); font-weight: 600; }
+.header-actions { margin-left: auto; display: flex; gap: 16px; }
+#back-btn { display: flex; align-items: center; justify-content: center; color: var(--text-muted); padding: 8px 8px 8px 0; }
+#back-btn svg { fill: currentColor; }
+.timer-btn { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-muted); cursor: pointer; margin-top: 3px; font-weight: 500; transition: color 0.2s; }
+.timer-btn:hover { color: var(--user-accent-1); }
+
+/* ═══════════ MESSAGES ═══════════ */
+.messages { flex: 1; overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 4px; background: var(--bg-main); }
+.system-msg { background: var(--surface-elevated); color: var(--text-muted); font-size: 12.5px; text-align: center; padding: 8px 16px; border-radius: var(--radius-lg); margin: 12px auto; max-width: 85%; }
+.date-sep { text-align: center; margin: 20px 0 10px; display: flex; justify-content: center; }
+.date-sep span { background: var(--surface-elevated); color: var(--text-muted); font-size: 12px; padding: 6px 16px; border-radius: var(--radius-lg); font-weight: 500; }
+
+.msg-row { display: flex; margin-bottom: 2px; flex-direction: column; max-width: 100%; width: 100%; animation: fadeIn 0.2s var(--ease); }
+.msg-row.me { align-items: flex-end; }
+.bubble { max-width: 85%; padding: 10px 14px; border-radius: var(--radius-lg); font-size: 15px; position: relative; line-height: 1.4; width: fit-content; box-shadow: var(--shadow-sm); transition: transform 0.15s; }
+.msg-row.me .bubble { background: var(--bubble-me-bg); color: var(--bubble-me-text); border-top-right-radius: 4px; margin-left: auto; }
+.msg-row.them .bubble { background: var(--bubble-them-bg); color: var(--bubble-them-text); border-top-left-radius: 4px; }
+.sender-name { font-size: 12.5px; font-weight: 700; color: var(--user-accent-2); margin-bottom: 4px; }
+.bubble.sticker-bubble { background: transparent !important; border: none !important; padding: 0 !important; box-shadow: none !important; }
+.bubble .sticker-img { width: 110px; height: 110px; object-fit: contain; }
+
+/* Reply Quotes */
+.reply-quote { background: var(--reply-bg); border-left: 4px solid var(--reply-border); padding: 8px 12px; margin-bottom: 8px; border-radius: 8px; font-size: 13px; cursor: pointer; transition: background 0.15s; }
+.reply-quote:hover { background: rgba(0, 168, 132, 0.22); }
+.reply-quote .q-name { font-weight: 700; color: var(--reply-border); font-size: 12px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reply-quote .q-text { color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 220px; }
+.msg-row.me .reply-quote { background: rgba(255, 255, 255, 0.12); border-left-color: rgba(255, 255, 255, 0.6); }
+.msg-row.me .reply-quote .q-name { color: #FFF; }
+.msg-row.me .reply-quote .q-text { color: rgba(255, 255, 255, 0.8); }
+[data-theme="light"] .msg-row.me .reply-quote { background: rgba(11, 20, 26, 0.07); border-left-color: rgba(11, 20, 26, 0.45); }
+[data-theme="light"] .msg-row.me .reply-quote .q-name { color: rgba(11, 20, 26, 0.92); }
+[data-theme="light"] .msg-row.me .reply-quote .q-text { color: rgba(11, 20, 26, 0.72); }
+
+/* Meta & Ticks */
+.msg-meta { float: right; margin: 4px 0 -2px 12px; font-size: 11.5px; color: var(--bubble-them-meta); display: flex; align-items: center; gap: 4px; font-weight: 500; height: 15px; }
+.msg-row.me .msg-meta { color: var(--bubble-me-meta); }
+.msg-row.them .msg-meta { color: var(--bubble-them-meta); }
+.tick { width: 16px; height: 16px; display: inline-block; }
+.tick svg { fill: var(--bubble-me-tick); }
+.msg-row.them .tick svg { fill: var(--bubble-them-meta); }
+.tick.read svg { fill: var(--bubble-me-tick-read); }
+.msg-star-indicator { float: right; margin: 3px 0 -3px 6px; color: #f59e0b; font-size: 12px; }
+
+/* Reactions */
+.reactions-container { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; justify-content: flex-end; }
+.msg-row.them .reactions-container { justify-content: flex-start; }
+.reaction-pill { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; padding: 3px 8px; font-size: 12.5px; display: flex; align-items: center; gap: 5px; cursor: pointer; transition: 0.15s var(--ease); color: var(--text); }
+.reaction-pill:hover { transform: scale(1.05); }
+.reaction-pill.active { border-color: var(--user-accent-1); background: var(--user-accent-tint); }
+.msg-row.search-hit .bubble { outline: 2px solid var(--user-accent-1); outline-offset: 3px; animation: pulse 1.5s infinite; }
+
+/* Swipe-to-reply */
+.bubble { position: relative; }
+.swipe-reply-icon { position: absolute; left: -36px; top: 50%; transform: translateY(-50%); width: 26px; height: 26px; border-radius: 50%; background: var(--user-accent-1); color: var(--user-accent-text); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.15s; pointer-events: none; z-index: 2; }
+.msg-row.me .swipe-reply-icon { left: auto; right: -36px; transform: translateY(-50%) scaleX(-1); }
+.msg-row.message-flash .bubble { animation: messageFlash 1.5s ease; }
+
+/* Media / Voice / Contact */
+.doc-msg { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; text-decoration: none; font-size: 14px; word-break: break-all; color: inherit; }
+[data-theme="light"] .doc-msg { background: rgba(11, 20, 26, 0.06); }
+.file-card { display: flex; align-items: center; gap: 12px; padding: 10px; background: rgba(0, 0, 0, 0.22); border-radius: 12px; min-width: 220px; max-width: 280px; }
+.file-card .fc-icon { width: 42px; height: 42px; border-radius: 10px; background: var(--user-accent-1); color: var(--user-accent-text); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; flex-shrink: 0; }
+.file-card .fc-info { flex: 1; min-width: 0; }
+.file-card .fc-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.file-card .fc-size { font-size: 11.5px; color: var(--bubble-me-meta); margin-top: 2px; }
+.file-card .fc-dl { color: var(--user-accent-2); font-size: 16px; padding: 6px; }
+
+.voice-note { display: flex; align-items: center; gap: 12px; padding: 6px 2px; min-width: 210px; max-width: 280px; }
+.voice-note .vn-play { width: 38px; height: 38px; border-radius: 50%; background: var(--user-accent-1); color: var(--user-accent-text); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 15px; }
+.voice-note .vn-track { flex: 1; height: 28px; display: flex; align-items: center; gap: 2px; cursor: pointer; }
+.voice-note .vn-track span { flex: 1; background: rgba(255, 255, 255, 0.4); border-radius: 2px; height: 20%; min-height: 3px; }
+.voice-note .vn-time { font-size: 11.5px; color: var(--bubble-me-meta); min-width: 38px; text-align: right; font-weight: 500; }
+
+.contact-card { background: rgba(0, 0, 0, 0.22); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 12px; min-width: 220px; border: 1px solid rgba(255, 255, 255, 0.12); }
+[data-theme="light"] .contact-card { background: rgba(11, 20, 26, 0.05); border: 1px solid rgba(11, 20, 26, 0.1); }
+.contact-card .avatar-wrap { width: 46px; height: 46px; }
+.contact-card .cc-info { flex: 1; min-width: 0; }
+.contact-card .cc-name { font-weight: 700; font-size: 14px; }
+.contact-card .cc-sub { font-size: 12px; color: var(--bubble-me-meta); }
+.contact-card .cc-btn { padding: 7px 14px; border-radius: 8px; background: var(--user-accent-1); color: var(--user-accent-text); font-size: 12px; font-weight: 700; flex-shrink: 0; border: none; }
+/* ═══════════ REPLY BANNER ═══════════ */
+.reply-banner { display: none; background: var(--bg-panel); padding: 12px 16px; border-top: 2px solid var(--user-accent-1); align-items: center; gap: 12px; flex-shrink: 0; }
+.reply-banner.show { display: flex; animation: replySlide 0.25s var(--ease); }
+.reply-banner .rb-icon { width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: var(--user-accent-tint); color: var(--user-accent-1); display: flex; align-items: center; justify-content: center; }
+.reply-banner .rb-content { flex: 1; min-width: 0; border-left: 3px solid var(--user-accent-1); padding-left: 12px; }
+.reply-banner .rb-name { font-size: 12.5px; font-weight: 700; color: var(--user-accent-1); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reply-banner .rb-text { font-size: 13.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reply-banner .rb-close { font-size: 20px; color: var(--text-muted); padding: 4px; flex-shrink: 0; border-radius: 8px; transition: 0.15s; }
+.reply-banner .rb-close:hover { background: var(--hover); color: var(--text); }
+
+/* ═══════════ COMPOSER (THE FIX) ═══════════ */
+.composer { background: var(--bg-panel); padding: 10px 12px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; border-top: 1px solid var(--border-light); padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+.composer.replying .input-wrap { border-color: var(--user-accent-1); box-shadow: 0 0 0 3px var(--user-accent-tint); }
+
+/* Small Icons Left */
+.composer .icon { flex-shrink: 0; width: 24px; height: 24px; margin: 0 4px; fill: var(--text-muted); transition: fill 0.2s; }
+.composer .icon:hover { fill: var(--user-accent-1); }
+
+/* Input Field - flex: 1 and min-width: 0 prevents it from breaking the layout */
+.composer .input-wrap { flex: 1; min-width: 0; background: var(--bg-main); border-radius: 24px; padding: 10px 16px; display: flex; align-items: center; border: 1px solid transparent; transition: 0.2s; }
+.composer .input-wrap:focus-within { border-color: var(--user-accent-1); }
+.composer input { flex: 1; min-width: 0; width: 100%; background: transparent; border: none; outline: none; font-size: 15px; padding: 2px 0; color: var(--text); }
+.composer input::placeholder { color: var(--text-dim); }
+
+/* Send / Voice Button */
+.composer .send-btn { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; background: var(--user-accent-2); color: #fff; display: flex; align-items: center; justify-content: center; transition: 0.2s var(--ease); border: none; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
+.composer .send-btn:hover { filter: brightness(1.1); }
+.composer .send-btn:active { transform: scale(0.9); }
+.composer .send-btn.sending { animation: sendFlash 0.3s var(--ease); }
+.composer .send-btn svg { fill: #fff; }
+.composer .send-btn.recording { background: #ef4444; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4); animation: pulse 1.5s infinite; }
+.composer .send-btn.recording svg { fill: #fff; }
+
+/* ═══════════ EMOJI & CHAT SEARCH ═══════════ */
+.emoji-panel { display: none; flex-direction: column; background: var(--bg-panel); border-top: 1px solid var(--border-light); max-height: 300px; flex-shrink: 0; }
+.emoji-panel.show { display: flex; animation: fadeIn 0.2s var(--ease); }
+.panel-tabs { display: flex; border-bottom: 1px solid var(--border); }
+.panel-tabs button { flex: 1; padding: 12px; font-size: 13px; color: var(--text-muted); font-weight: 600; transition: 0.2s; }
+.panel-tabs button.active { color: var(--user-accent-1); border-bottom: 2px solid var(--user-accent-1); }
+.panel-content { overflow-y: auto; }
+.emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 4px; padding: 16px; }
+.emoji-grid span { font-size: 28px; text-align: center; cursor: pointer; padding: 6px; border-radius: 12px; transition: 0.15s; }
+.emoji-grid span:hover { background: var(--bg-main); transform: scale(1.15); }
+.sticker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; padding: 12px; }
+.sticker-grid img { width: 100%; height: 74px; object-fit: contain; cursor: pointer; border-radius: 8px; transition: 0.2s; }
+.sticker-grid img:hover { background: var(--hover); transform: scale(1.05); }
+
+.chat-search-bar { display: none; padding: 10px 16px; background: var(--bg-panel); border-bottom: 1px solid var(--border); gap: 10px; align-items: center; flex-shrink: 0; }
+.chat-search-bar.show { display: flex; animation: fadeIn 0.2s var(--ease); }
+.chat-search-bar input { flex: 1; padding: 10px 14px; border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--bg-main); font-size: 14px; outline: none; color: var(--text); }
+.chat-search-bar input:focus { border-color: var(--user-accent-1); }
+.chat-search-bar .cs-count { font-size: 12px; color: var(--text-muted); min-width: 40px; text-align: right; font-weight: 600; }
+
+.scroll-bottom-btn { position: absolute; bottom: 90px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: var(--surface-elevated); color: var(--text-muted); display: none; align-items: center; justify-content: center; box-shadow: var(--shadow-md); z-index: 15; border: 1px solid var(--border); transition: 0.2s; }
+.scroll-bottom-btn.show { display: flex; animation: popIn 0.2s var(--ease); }
+.scroll-bottom-btn:active { transform: scale(0.9); }
+
+/* ═══════════ MODALS & SETTINGS ═══════════ */
+.modal-overlay { position: fixed; inset: 0; background: var(--overlay); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; animation: fadeIn 0.2s var(--ease); }
+.modal { background: var(--bg-panel); padding: 24px; border-radius: var(--radius-xl); width: 100%; max-width: 400px; border: 1px solid var(--border-light); max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); animation: popIn 0.25s var(--ease); }
+.modal h3 { margin: 0 0 20px; text-align: center; font-size: 18px; font-weight: 700; }
+.modal h4 { margin: 0 0 10px; font-size: 14px; font-weight: 600; color: var(--text-muted); }
+.modal input, .modal textarea { width: 100%; padding: 16px; margin-bottom: 14px; background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--radius-lg); resize: none; color: var(--text); outline: none; transition: 0.2s; font-size: 15px; }
+.modal input:focus, .modal textarea:focus { border-color: var(--user-accent-1); box-shadow: 0 0 0 3px var(--user-accent-tint); }
+.modal button { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: var(--radius-lg); font-weight: 600; transition: 0.15s var(--ease); border: none; font-size: 15px; }
+.modal button:active { transform: scale(0.98); }
+.btn-primary { background: var(--user-accent-1); color: var(--user-accent-text); }
+.btn-primary:hover { filter: brightness(1.1); }
+.btn-secondary { background: var(--bg-main); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--hover); }
+.btn-danger { background: #ef4444; color: #fff; }
+.btn-danger:hover { background: #dc2626; }
+
+.theme-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: var(--bg-main); padding: 12px 14px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
+.emoji-picker { display: flex; justify-content: space-around; background: var(--bg-main); padding: 12px; border-radius: var(--radius-lg); margin-bottom: 14px; border: 1px solid var(--border); }
+.emoji-picker span { font-size: 26px; cursor: pointer; transition: 0.15s; padding: 4px; border-radius: 8px; }
+.emoji-picker span:hover { transform: scale(1.25); background: var(--hover); }
+.user-select-list { max-height: 220px; overflow-y: auto; border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 15px; background: var(--bg-main); }
+.user-select-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.15s; }
+.user-select-item:hover { background: var(--hover); }
+.user-select-item.selected { background: var(--user-accent-tint); border-left: 3px solid var(--user-accent-1); }
+.member-list { max-height: 220px; overflow-y: auto; background: var(--bg-main); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 15px; }
+.member-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); }
+.admin-badge { background: var(--user-accent-1); color: var(--user-accent-text); font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; margin-left: 8px; text-transform: uppercase; }
+.timer-option { background: var(--bg-main); border: 1px solid var(--border); text-align: left; color: var(--text); }
+.timer-option:hover { border-color: var(--user-accent-1); background: var(--user-accent-tint); }
+.forward-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); cursor: pointer; transition: 0.15s; }
+.forward-item:hover { background: var(--hover); }
+
+.settings-page { display: none; flex-direction: column; height: 100%; background: var(--bg-panel); position: absolute; top: 0; left: 0; width: 100%; z-index: 30; }
+.settings-page.active { display: flex; animation: fadeIn 0.2s var(--ease); }
+.settings-header { display: flex; align-items: center; padding: 18px; background: var(--header); border-bottom: 1px solid var(--border); gap: 20px; }
+.settings-header h2 { margin: 0; font-size: 20px; flex: 1; font-weight: 700; }
+.settings-list { flex: 1; overflow-y: auto; padding-bottom: 30px; }
+.settings-item { display: flex; align-items: center; gap: 16px; padding: 16px 18px; cursor: pointer; border-bottom: 1px solid var(--border); transition: 0.15s; }
+.settings-item:hover { background: var(--hover); }
+.settings-item .icon-wrap { width: 42px; height: 42px; border-radius: 12px; background: var(--user-accent-tint); display: flex; align-items: center; justify-content: center; color: var(--user-accent-1); font-size: 20px; }
+.settings-item .info { flex: 1; }
+.settings-item .info h4 { margin: 0; font-size: 15px; font-weight: 600; }
+.settings-item .info p { margin: 4px 0 0; font-size: 12.5px; color: var(--text-muted); }
+.starred-item { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; gap: 14px; align-items: center; cursor: pointer; transition: 0.15s; }
+.starred-item:hover { background: var(--user-accent-tint); }
+.starred-item .si-icon { color: #f59e0b; font-size: 20px; }
+.starred-item .si-body { flex: 1; min-width: 0; }
+.starred-item .si-text { font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.starred-item .si-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+/* ═══════════ MEDIA VIEWER ═══════════ */
+.media-viewer { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.98); z-index: 600; display: flex; align-items: center; justify-content: center; flex-direction: column; animation: fadeIn 0.2s var(--ease); }
+.media-viewer img, .media-viewer video { max-width: 96vw; max-height: 86vh; border-radius: 12px; object-fit: contain; }
+.media-viewer .mv-controls { position: absolute; top: 16px; right: 16px; display: flex; gap: 10px; z-index: 3; }
+.media-viewer .mv-btn { width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; border: none; transition: 0.2s; }
+.media-viewer .mv-btn:hover { background: rgba(255, 255, 255, 0.32); }
+.media-viewer .mv-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; background: rgba(255, 255, 255, 0.18); color: #fff; font-size: 28px; display: flex; align-items: center; justify-content: center; z-index: 3; border: none; }
+.media-viewer .mv-nav.prev { left: 16px; }
+.media-viewer .mv-nav.next { right: 16px; }
+.media-viewer .mv-counter { position: absolute; top: 22px; left: 22px; color: #fff; font-size: 13px; background: rgba(0, 0, 0, 0.65); padding: 5px 14px; border-radius: 14px; z-index: 3; font-weight: 600; }
+
+/* ═══════════ STATUS ═══════════ */
+.status-page-overlay { position: fixed; inset: 0; background: var(--bg-main); z-index: 200; display: flex; flex-direction: column; animation: fadeIn 0.2s var(--ease); }
+.status-page-header { display: flex; align-items: center; padding: 18px; background: var(--header); border-bottom: 1px solid var(--border); }
+.status-page-header h2 { margin: 0; font-size: 20px; flex: 1; font-weight: 700; }
+.status-scroll { display: flex; overflow-x: auto; gap: 14px; padding: 18px; scrollbar-width: none; }
+.status-scroll::-webkit-scrollbar { display: none; }
+.status-card { width: 110px; height: 170px; border-radius: var(--radius-lg); background: var(--bg-panel); position: relative; overflow: hidden; flex-shrink: 0; cursor: pointer; border: 1px solid var(--border); display: flex; flex-direction: column; transition: 0.2s; box-shadow: var(--shadow-sm); }
+.status-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+.status-card-image { flex: 1; overflow: hidden; position: relative; }
+.status-card-image img, .status-card-image video { width: 100%; height: 100%; object-fit: cover; }
+.status-card-gradient { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent 60%); }
+.status-card-name { position: absolute; bottom: 10px; left: 10px; right: 10px; color: #fff; font-size: 13px; font-weight: 600; z-index: 2; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status-card-ring { position: absolute; top: 10px; left: 10px; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--user-accent-1); background: var(--bg-main); z-index: 2; overflow: hidden; }
+.status-card-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.status-card-add { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+.status-card-add .plus-circle { width: 40px; height: 40px; border-radius: 50%; background: var(--user-accent-1); color: var(--user-accent-text); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: bold; margin-bottom: 10px; }
+.status-close-text { padding: 20px; text-align: center; color: var(--user-accent-1); font-weight: 600; font-size: 15px; cursor: pointer; }
+.status-viewer { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.98); z-index: 300; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.2s var(--ease); }
+.status-progress { position: absolute; top: 14px; left: 14px; right: 14px; display: flex; gap: 5px; }
+.status-progress-bar { flex: 1; height: 3px; background: rgba(255, 255, 255, 0.3); border-radius: 2px; overflow: hidden; }
+.status-progress-bar.done { background: #fff; }
+.status-progress-bar.active > div { height: 100%; width: 100%; background: #fff; animation: statusFill 5s linear forwards; }
+@keyframes statusFill { from { width: 0; } to { width: 100%; } }
+.status-media { max-width: 100%; max-height: 85vh; }
+.status-media img, .status-media video { max-width: 100%; max-height: 85vh; border-radius: 12px; }
+.status-close { position: absolute; top: 22px; right: 22px; color: #fff; font-size: 24px; background: rgba(0, 0, 0, 0.6); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; transition: 0.2s; }
+.status-close:hover { background: rgba(0, 0, 0, 0.85); }
+.status-nav { position: absolute; top: 50%; transform: translateY(-50%); color: #fff; font-size: 38px; width: 48px; height: 48px; background: rgba(255, 255, 255, 0.18); border-radius: 50%; display: flex; align-items: center; justify-content: center; user-select: none; cursor: pointer; border: none; }
+.status-nav.prev { left: 14px; }
+.status-nav.next { right: 14px; }
+.status-reply-bar { position: absolute; bottom: 24px; left: 24px; right: 24px; display: flex; gap: 10px; z-index: 5; }
+.status-reply-bar input { flex: 1; padding: 13px 18px; border-radius: 26px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.35); color: #fff; outline: none; font-size: 14px; }
+.status-reply-bar input::placeholder { color: rgba(255, 255, 255, 0.75); }
+.status-reply-bar button { width: 48px; height: 48px; border-radius: 50%; background: var(--user-accent-1); color: var(--user-accent-text); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: none; }
+.status-reply-bar button svg { fill: var(--user-accent-text); }
+/* ═══════════ IN-APP BANNER ═══════════ */
+.in-app-banner { position: fixed; top: -100px; left: 12px; right: 12px; background: var(--header); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 13px 16px; display: flex; align-items: center; gap: 12px; box-shadow: var(--shadow-lg); z-index: 9999; cursor: pointer; transition: top 0.4s var(--ease); }
+.in-app-banner.show { top: 12px; }
+.in-app-banner .banner-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--user-accent-1); color: var(--user-accent-text); display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; font-size: 15px; }
+.in-app-banner .banner-content { flex: 1; min-width: 0; }
+.in-app-banner .banner-title { font-weight: 700; font-size: 14px; color: var(--text); margin-bottom: 3px; }
+.in-app-banner .banner-body { font-size: 13px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (min-width: 768px) {
+  .app-container { max-width: 520px; margin: 0 auto; box-shadow: 0 0 100px rgba(0, 168, 132, 0.15); }
+}
+@media (max-width: 400px) {
+  .bottom-nav { padding: 0 12px; }
+  .avatar-wrap { width: 46px; height: 46px; }
+  .bubble { max-width: 88%; }
+}
+/* ═══════════ FIXES FOR LIGHT MODE & COMPOSER ═══════════ */
+
+/* 1. Fix invisible text in the Appearance Modal */
+.modal, .modal h3, .modal h4, .modal label, .theme-row {
+  color: var(--text) !important;
+}
+
+/* 2. Make the paperclip and emoji icons visible and clickable */
+.composer .icon {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  min-width: 28px; /* Prevents them from vanishing */
+  margin: 0 4px;
+  fill: #54656F !important; /* Dark grey for light mode */
+  color: #54656F !important;
+}
+
+/* Dark mode icon color */
+[data-theme="dark"] .composer .icon,
+[data-theme="neon"] .composer .icon {
+  fill: #8696A0 !important;
+  color: #8696A0 !important;
+}
+
+/* 3. Lock the input field so it doesn't push the send button */
+.composer .input-wrap {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+.composer input {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+/* 4. Force the Send Button to always be Green */
+.composer .send-btn {
+  background-color: #00A884 !important; 
+  color: #ffffff !important;
+  flex-shrink: 0;
+}
+/* ═══════════ FULL SCREEN CHAT & MODERN COMPOSER ═══════════ */
+
+/* 1. Hide bottom nav and expand chat window when a chat is open */
+.app-container.chat-open #view-chats {
+  height: 100% !important; /* Expands to fill the screen */
+  padding-bottom: 0 !important;
+}
+.app-container.chat-open .bottom-nav {
+  display: none !important; /* Hides the tabs */
+}
+.app-container.chat-open #chat-window {
+  height: 100% !important;
+}
+
+/* 2. Clean, Modern Composer (Input Bar) */
+.composer {
+  background: var(--bg-panel);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-light);
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
+
+/* The pill-shaped input field */
+.composer .input-wrap {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface-elevated); /* Pure white in light mode */
+  border-radius: 24px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Soft shadow instead of harsh border */
+  transition: box-shadow 0.2s var(--ease);
+}
+
+/* Subtle green glow when typing */
+.composer .input-wrap:focus-within {
+  box-shadow: 0 0 0 2px var(--user-accent-1);
+}
+
+.composer input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  padding: 2px 0;
+  color: var(--text);
+}
+/* ═══════════ PERFECT PILL-SHAPED COMPOSER ═══════════ */
+.composer {
+  background: var(--bg-panel);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-light);
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
+
+.composer .input-wrap {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface-elevated, #FFFFFF); 
+  border-radius: 999px; /* Perfect curve */
+  padding: 0 16px;
+  height: 46px; /* Matches the send button height */
+  display: flex;
+  align-items: center;
+  border: none;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s var(--ease);
+}
+
+[data-theme="dark"] .composer .input-wrap,
+[data-theme="neon"] .composer .input-wrap {
+  background: var(--bg-main); /* Dark mode background */
+}
+
+.composer .input-wrap:focus-within {
+  box-shadow: 0 0 0 2px var(--user-accent-1);
+}
+
+.composer input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  padding: 0;
+  color: var(--text);
+}
+/* ═══════════ STYLISH & CURVY COMPOSER ═══════════ */
+
+/* 1. The Composer Container */
+.composer {
+  background: var(--bg-panel);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Perfect spacing between all elements */
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-light);
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+}
+
+/* 2. The Input Field (Pill Shape) */
+.composer .input-wrap {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface-elevated, #FFFFFF); /* Clean white in light mode */
+  border-radius: 999px; /* Perfect pill curve */
+  padding: 0 16px;
+  height: 46px; /* Matches the send button height */
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06); /* Soft, modern shadow */
+  transition: all 0.2s var(--ease);
+}
+
+[data-theme="dark"] .composer .input-wrap,
+[data-theme="neon"] .composer .input-wrap {
+  background: var(--bg-main); 
+  border: 1px solid var(--border);
+}
+
+/* Subtle green glow only when the user is typing */
+.composer .input-wrap:focus-within {
+  border-color: var(--user-accent-1);
+  box-shadow: 0 0 0 3px var(--user-accent-tint);
+}
+
+.composer input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: var(--text);
+  padding: 0;
+}
+
+/* 3. Attachment & Emoji Icons (Circular tap areas) */
+.composer .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Makes the hover effect circular */
+  fill: var(--text-muted);
+  transition: background 0.2s, fill 0.2s;
+  margin: 0;
+}
+
+.composer .icon:hover,
+.composer .icon:active {
+  background: var(--hover);
+  fill: var(--user-accent-1);
+}
+
+.composer .icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* 4. Send / Voice Button (Slightly larger, vibrant) */
+.composer .send-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--user-accent-1, #00A884);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: none;
+  box-shadow: 0 4px 14px rgba(0, 168, 132, 0.35); /* Premium glow */
+  transition: transform 0.2s var(--ease), box-shadow 0.2s;
+  margin-left: 4px;
+}
+
+.composer .send-btn:active {
+  transform: scale(0.92); /* Pushes in when tapped */
+  box-shadow: 0 2px 6px rgba(0, 168, 132, 0.2);
+}
+
+.composer .send-btn svg {
+  fill: #ffffff;
+  width: 20px;
+  height: 20px;
+}
+
+.composer .send-btn.recording {
+  background: #ef4444 !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+  animation: pulse 1.5s infinite;
+}
+/* ═══════════ ULTIMATE COMPOSER FIX (NO BORDERS, PURE CURVES) ═══════════ */
+
+/* 1. The container holding everything */
+.composer {
+  background: var(--bg-panel) !important;
+  padding: 8px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  border-top: 1px solid var(--border-light) !important;
+  /* Removes extra space above keyboard on mobile */
+  padding-bottom: calc(8px + env(safe-area-inset-bottom)) !important; 
+}
+
+/* 2. The Input Field (Pill Shape, No Borders) */
+.composer .input-wrap {
+  flex: 1 !important;
+  min-width: 0 !important;
+  background: var(--bg-main) !important; /* Soft grey in light mode */
+  border-radius: 999px !important; /* Perfect curve */
+  padding: 0 18px !important;
+  height: 48px !important; /* Matches send button */
+  display: flex !important;
+  align-items: center !important;
+  border: none !important; /* Kills the boxy green outline */
+  outline: none !important;
+  box-shadow: none !important; /* Removes harsh shadows */
+  transition: background 0.2s !important;
+}
+
+[data-theme="light"] .composer .input-wrap {
+  background: #F0F2F5 !important; /* WhatsApp light theme input background */
+}
+
+/* When user clicks in the input, just slightly brighten it instead of a border */
+.composer .input-wrap:focus-within {
+  background: var(--bg-panel) !important;
+  box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.2) !important; /* Very subtle glow */
+}
+
+.composer input {
+  flex: 1 !important;
+  min-width: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 15px !important;
+  color: var(--text) !important;
+  padding: 0 !important;
+}
+
+/* 3. Make the Icons (Paperclip & Emoji) look like smooth circles */
+.composer .icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important; 
+  fill: #54656F !important;
+  margin: 0 !important;
+  transition: background 0.2s !important;
+}
+
+[data-theme="dark"] .composer .icon,
+[data-theme="neon"] .composer .icon {
+  fill: #8696A0 !important;
+}
+
+.composer .icon:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+[data-theme="dark"] .composer .icon:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.composer .icon svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* 4. Send / Microphone Button */
+.composer .send-btn {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  background: var(--user-accent-1) !important; /* WhatsApp Green */
+  color: #ffffff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 168, 132, 0.25) !important; 
+  transition: transform 0.15s ease !important;
+}
+
+.composer .send-btn:active {
+  transform: scale(0.92) !important;
+}
+
+.composer .send-btn svg {
+  fill: #ffffff !important;
+}
+/* ═══════════ MESSAGE STATUS DOTS ═══════════ */
+.msg-status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-left: 6px;
+  vertical-align: middle;
+  transition: background-color 0.3s ease;
+}
+
+/* Read (Green) */
+.msg-status-dot.read { 
+  background-color: #10b981; 
+}
+
+/* Delivered, User Online (Orange) */
+.msg-status-dot.online { 
+  background-color: #f59e0b; 
+}
+
+/* Delivered, User Offline (Red) */
+.msg-status-dot.offline { 
+  background-color: #ef4444; 
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   PREMIUM UI UPGRADE & BUG FIXES
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* --- 1. CRITICAL FIX: Invisible Text on Profile & Settings --- */
+.settings-item .info h4 { 
+  color: var(--text) !important; 
+  font-weight: 600 !important;
+}
+.settings-item .info p { 
+  color: var(--text-muted) !important; 
+}
+.settings-header h2 { 
+  color: var(--text) !important; 
+}
+#view-profile h2 { 
+  color: var(--text) !important; 
+}
+#view-profile p { 
+  color: var(--text-muted) !important; 
+}
+.modal h3, .modal h4, .modal label, .theme-row { 
+  color: var(--text) !important; 
+}
+
+/* --- 2. Premium Headers & Bottom Nav --- */
+.header, .chat-header, .bottom-nav {
+  background: var(--bg-panel) !important;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04) !important;
+  border-bottom: none !important;
+  border-top: none !important;
+}
+[data-theme="dark"] .header, 
+[data-theme="dark"] .chat-header, 
+[data-theme="dark"] .bottom-nav {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Bottom nav active state */
+.bottom-nav-btn.active {
+  color: var(--user-accent-1) !important;
+}
+.bottom-nav-btn::after {
+  background: var(--user-accent-1) !important;
+  box-shadow: 0 -2px 10px rgba(0, 168, 132, 0.4) !important;
+}
+
+/* --- 3. Beautiful & Curvy Chat Bubbles --- */
+.bubble {
+  border-radius: 20px !important;
+  padding: 10px 16px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+  border: none !important; /* Removes any harsh borders */
+}
+.msg-row.me .bubble {
+  border-top-right-radius: 4px !important; /* The modern "tail" */
+  box-shadow: 0 2px 8px rgba(0, 168, 132, 0.15) !important; /* Green glow */
+}
+.msg-row.them .bubble {
+  border-top-left-radius: 4px !important;
+  background: var(--bg-panel) !important; /* Pure white in light mode */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* --- 4. Premium Avatars (Subtle Gradient) --- */
+.avatar {
+  background: linear-gradient(135deg, var(--user-accent-tint) 0%, rgba(0,0,0,0.05) 100%) !important;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+}
+[data-theme="light"] .avatar {
+  background: linear-gradient(135deg, #E3E9ED 0%, #D1DCE3 100%) !important;
+  color: #54656F !important;
+}
+
+/* --- 5. Sleek Search & Tabs --- */
+.search-row input {
+  background: var(--bg-panel) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+  border: 1px solid var(--border-light) !important;
+}
+.search-row input:focus {
+  box-shadow: 0 0 0 2px var(--user-accent-1) !important;
+}
+.tab-btn {
+  background: var(--bg-panel) !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04) !important;
+}
+.tab-btn.active {
+  background: var(--user-accent-tint) !important;
+  box-shadow: none !important;
+}
+
+/* --- 6. The Ultimate Composer Input Bar --- */
+.composer {
+  background: var(--bg-panel) !important;
+  border-top: none !important;
+  box-shadow: 0 -2px 15px rgba(0,0,0,0.03) !important;
+  padding: 10px 12px !important;
+}
+
+.composer .input-wrap {
+  background: var(--bg-main) !important; /* Soft tint */
+  border: none !important;
+  border-radius: 999px !important;
+  height: 48px !important;
+  padding: 0 18px !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .composer .input-wrap {
+  background: #FFFFFF !important; /* White in light mode */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; /* Soft floating shadow */
+}
+
+/* Focus glow instead of an ugly border */
+.composer .input-wrap:focus-within {
+  box-shadow: 0 0 0 2px var(--user-accent-1) !important;
+}
+
+.composer input {
+  background: transparent !important;
+}
+
+/* Icons inside composer */
+.composer .icon {
+  fill: var(--text-muted) !important;
+}
+.composer .icon:hover {
+  background: var(--bg-main) !important;
+  fill: var(--user-accent-1) !important;
+}
+
+/* --- 7. Glassy Scroll-to-Bottom Button --- */
+.scroll-bottom-btn {
+  background: var(--bg-panel) !important;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-light) !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+  color: var(--text-muted) !important;
+}
+.scroll-bottom-btn:hover {
+  color: var(--user-accent-1) !important;
+}
+
+/* --- 8. Refined Status Dots --- */
+.msg-status-dot {
+  width: 9px !important;
+  height: 9px !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+  margin-left: 8px !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   PREMIUM PAGE UPGRADES (PROFILE & CHAT)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* --- 1. PREMIUM PROFILE PAGE --- */
+
+/* Make the profile header blend seamlessly */
+.settings-header {
+  background: var(--bg-main) !important;
+  border-bottom: none !important;
+  padding-top: 24px !important;
+}
+
+/* Grouped Settings List (iOS Style) */
+.settings-list {
+  margin: 16px !important;
+  background: var(--bg-panel) !important;
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid var(--border-light) !important;
+}
+
+[data-theme="dark"] .settings-list {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Individual Setting Items */
+.settings-item {
+  border-bottom: 1px solid var(--border-light) !important;
+  padding: 16px 20px !important;
+  transition: background 0.2s !important;
+}
+.settings-item:last-child {
+  border-bottom: none !important;
+}
+.settings-item:hover {
+  background: var(--hover) !important;
+}
+
+/* Setting Icons */
+.settings-item .icon-wrap {
+  border-radius: 14px !important;
+  width: 44px !important;
+  height: 44px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+}
+
+/* Profile Avatar ring */
+#view-profile .avatar-wrap {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+  border: 3px solid var(--bg-panel) !important;
+  background: var(--bg-panel) !important;
+}
+
+/* --- 2. PREMIUM CHAT INPUT BAR --- */
+
+/* Completely strip the container */
+.composer {
+  background: var(--bg-panel) !important;
+  border-top: none !important;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.04) !important;
+  padding: 12px 16px !important;
+}
+
+/* The Input Pill: Kills the green box */
+.composer .input-wrap {
+  background: var(--bg-main) !important; /* Soft grey */
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 999px !important;
+  height: 48px !important;
+  padding: 0 18px !important;
+}
+
+[data-theme="light"] .composer .input-wrap {
+  background: #F0F2F5 !important; /* WhatsApp light input */
+}
+
+/* When typing, do NOT show a harsh border, just a soft glow */
+.composer .input-wrap:focus-within {
+  border: none !important;
+  box-shadow: 0 0 0 2px rgba(0, 168, 132, 0.3) !important; 
+}
+
+.composer input {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Make the attachment and emoji icons look clickable */
+.composer .icon {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 50% !important;
+  fill: var(--text-muted) !important;
+  transition: background 0.2s, fill 0.2s !important;
+}
+
+.composer .icon:hover, 
+.composer .icon:active {
+  background: var(--bg-main) !important;
+  fill: var(--user-accent-1) !important;
+}
+
+/* --- 3. PREMIUM SCROLL TO BOTTOM BUTTON --- */
+
+.scroll-bottom-btn {
+  width: 46px !important;
+  height: 46px !important;
+  background: var(--bg-panel) !important; 
+  border: 1px solid var(--border-light) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12) !important;
+  color: var(--text-muted) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  bottom: 85px !important;
+  right: 20px !important;
+}
+
+.scroll-bottom-btn svg {
+  width: 24px !important;
+  height: 24px !important;
+  transition: transform 0.2s !important;
+}
+
+.scroll-bottom-btn:hover svg {
+  transform: translateY(2px) !important;
+  color: var(--user-accent-1) !important;
+}
+
+/* --- 4. CHAT HEADER SHADOW --- */
+
+.chat-header {
+  background: var(--bg-panel) !important;
+  border-bottom: none !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04) !important;
+  z-index: 100 !important;
+}
+
+/* Make the read receipt dots perfectly aligned */
+.msg-meta {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   EXACT WHATSAPP INPUT BAR STYLE
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. The Bottom Bar Container */
+.composer {
+  background: #1F2C33 !important; /* Matches WhatsApp dark header */
+  padding: 8px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+}
+
+[data-theme="light"] .composer {
+  background: #F0F2F5 !important; /* Light mode background */
+}
+
+/* 2. The Input Pill */
+.composer .input-wrap {
+  background: #2A3942 !important; /* WhatsApp dark input field color */
+  border-radius: 24px !important;
+  height: 48px !important;
+  padding: 0 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  border: none !important;
+  box-shadow: none !important; /* Removes that floating shadow */
+  margin: 0 4px !important;
+}
+
+[data-theme="light"] .composer .input-wrap {
+  background: #FFFFFF !important;
+}
+
+/* Kill the green outline when typing */
+.composer .input-wrap:focus-within {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 3. The Text Input */
+.composer input {
+  background: transparent !important;
+  color: #E9EDEF !important;
+  font-size: 16px !important;
+  padding: 0 !important;
+}
+
+[data-theme="light"] .composer input {
+  color: #111B21 !important;
+}
+
+.composer input::placeholder {
+  color: #8696A0 !important; /* WhatsApp grey placeholder */
+}
+
+/* 4. The Left Icons (Attach & Emoji) */
+.composer .icon {
+  width: 44px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  fill: #8696A0 !important; /* WhatsApp grey icons */
+  background: transparent !important;
+  margin: 0 !important;
+  border-radius: 50% !important;
+}
+
+.composer .icon:active {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 5. The Send / Microphone Button */
+.composer .send-btn {
+  background: #00A884 !important; /* WhatsApp Green */
+  color: #FFFFFF !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: none !important;
+  box-shadow: none !important; /* Removes the heavy shadow */
+  margin: 0 !important;
+}
+
+/* Make the mic/send icon inside the button white */
+.composer .send-btn svg {
+  fill: #FFFFFF !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* Fix the recording state */
+.composer .send-btn.recording {
+  background: #ef4444 !important; /* Red when recording */
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   EXACT WHATSAPP UI MATCH (From Screenshot)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. The Bottom Bar Container */
+.composer {
+  background: transparent !important; /* Blends with the chat background */
+  padding: 8px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important; /* Space between the pill and the white button */
+  border-top: none !important;
+  box-shadow: none !important;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom)) !important;
+}
+
+/* 2. Emoji Button (Visually inside the left side of the pill) */
+.composer #emoji-btn {
+  order: 1 !important; /* Moves emoji to the left */
+  background: #2A3942 !important; /* Pill color */
+  border-radius: 24px 0 0 24px !important; /* Left side curves */
+  height: 46px !important;
+  width: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  fill: #8696A0 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Remove hover effect so the pill looks solid */
+.composer #emoji-btn:hover, .composer #emoji-btn:active {
+  background: #2A3942 !important;
+}
+
+/* 3. Text Input Area (The middle of the pill) */
+.composer .input-wrap {
+  order: 2 !important; /* Middle */
+  background: #2A3942 !important; /* Pill color */
+  border-radius: 0 !important; /* Square edges to merge with icons */
+  height: 46px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding: 0 4px !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.composer input {
+  background: transparent !important;
+  color: #E9EDEF !important; /* Light text */
+  font-size: 16px !important;
+  padding: 0 8px !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.composer input::placeholder {
+  color: #8696A0 !important;
+}
+
+/* 4. Attach Button (Visually inside the right side of the pill) */
+.composer #attach-btn {
+  order: 3 !important; /* Moves attach to the right */
+  background: #2A3942 !important; /* Pill color */
+  border-radius: 0 24px 24px 0 !important; /* Right side curves */
+  height: 46px !important;
+  width: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  fill: #8696A0 !important;
+  flex-shrink: 0 !important;
+}
+
+/* Remove hover effect */
+.composer #attach-btn:hover, .composer #attach-btn:active {
+  background: #2A3942 !important;
+}
+
+/* 5. Send / Microphone Button (Far right, pure white) */
+.composer .send-btn {
+  order: 4 !important; /* Far right */
+  background: #FFFFFF !important; /* Pure white */
+  color: #0B141A !important; /* Dark color for the icon */
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+/* Force the mic/send icon to be black */
+.composer .send-btn svg {
+  fill: #0B141A !important; 
+  width: 24px !important;
+  height: 24px !important;
+}
+
+/* Fix the recording state color */
+.composer .send-btn.recording {
+  background: #ef4444 !important; 
+}
+.composer .send-btn.recording svg {
+  fill: #FFFFFF !important; /* White icon when red */
+}
+
+/* --- LIGHT MODE OVERRIDES (So it looks good in light mode too) --- */
+[data-theme="light"] .composer #emoji-btn,
+[data-theme="light"] .composer #attach-btn,
+[data-theme="light"] .composer .input-wrap {
+  background: #FFFFFF !important; /* White pill in light mode */
+  fill: #54656F !important;
+}
+[data-theme="light"] .composer input {
+  color: #111B21 !important;
+}
+[data-theme="light"] .composer .send-btn {
+  background: #00A884 !important; /* Green button in light mode */
+}
+[data-theme="light"] .composer .send-btn svg {
+  fill: #FFFFFF !important; /* White icon in light mode */
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   REMOVE BACKGROUND COLOR FROM INPUT BAR
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Make the main container completely transparent */
+.composer {
+  background: transparent !important; 
+  box-shadow: none !important;
+  border-top: none !important;
+  padding: 8px 12px !important;
+}
+
+/* 2. Strip the white/dark backgrounds from the pill elements */
+.composer .input-wrap,
+.composer #emoji-btn,
+.composer #attach-btn {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* 3. Remove the curvy border-radius since there's no background anymore */
+.composer #emoji-btn {
+  border-radius: 50% !important;
+}
+.composer #attach-btn {
+  border-radius: 50% !important;
+}
+.composer .input-wrap {
+  border-radius: 0 !important;
+}
+
+/* 4. Ensure text and icons stay visible in Light Mode */
+[data-theme="light"] .composer input {
+  color: #111B21 !important; /* Dark text */
+}
+[data-theme="light"] .composer #emoji-btn,
+[data-theme="light"] .composer #attach-btn {
+  fill: #54656F !important; /* Dark grey icons */
+}
+
+/* 5. Ensure text and icons stay visible in Dark Mode */
+[data-theme="dark"] .composer input,
+[data-theme="neon"] .composer input {
+  color: #E9EDEF !important; /* Light text */
+}
+[data-theme="dark"] .composer #emoji-btn,
+[data-theme="dark"] .composer #attach-btn,
+[data-theme="neon"] .composer #emoji-btn,
+[data-theme="neon"] .composer #attach-btn {
+  fill: #8696A0 !important; /* Light grey icons */
+}
+
+/* Keep the send button exactly as it is (Green circle) */
+.composer .send-btn {
+  background: #00A884 !important; 
+  box-shadow: 0 2px 8px rgba(0, 168, 132, 0.3) !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   FULLY TRANSPARENT FLOATING INPUT BAR
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Make the entire bottom bar transparent */
+.composer {
+  background: transparent !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  padding: 10px 12px !important;
+}
+
+/* 2. Remove the gray and white boxes from the input and icons */
+.composer .input-wrap,
+.composer .icon,
+.composer #emoji-btn,
+.composer #attach-btn {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* 3. Make the text input field completely transparent */
+.composer input {
+  background: transparent !important;
+  color: var(--text) !important;
+}
+
+/* 4. Ensure the icons are clearly visible against any background */
+[data-theme="light"] .composer #emoji-btn,
+[data-theme="light"] .composer #attach-btn {
+  fill: #54656F !important; /* Dark grey for light mode */
+}
+[data-theme="dark"] .composer #emoji-btn,
+[data-theme="dark"] .composer #attach-btn,
+[data-theme="neon"] .composer #emoji-btn,
+[data-theme="neon"] .composer #attach-btn {
+  fill: #8696A0 !important; /* Light grey for dark mode */
+}
+
+/* 5. Keep the Send/Mic button solid so it's tappable */
+.composer .send-btn {
+  background: #00A884 !important; 
+  box-shadow: 0 2px 10px rgba(0, 168, 132, 0.3) !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   MIRACULOUS CURVY INPUT BAR
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. The Container */
+.composer {
+  background: var(--bg-panel) !important;
+  padding: 10px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  border-top: 1px solid var(--border-light) !important;
+  box-shadow: 0 -2px 15px rgba(0,0,0,0.03) !important;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+}
+
+/* 2. The Text Input Pill */
+.composer .input-wrap {
+  flex: 1 !important;
+  min-width: 0 !important;
+  background: var(--bg-main) !important; /* Soft grey */
+  border-radius: 999px !important; /* Perfect pill shape */
+  padding: 0 18px !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Light mode background for the input */
+[data-theme="light"] .composer .input-wrap {
+  background: #FFFFFF !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+  border: 1px solid #E9EDEF !important;
+}
+
+/* The "Miraculous" Glow when typing */
+.composer .input-wrap:focus-within {
+  background: var(--bg-panel) !important;
+  border-color: var(--user-accent-1) !important;
+  box-shadow: 0 0 0 3px var(--user-accent-tint) !important;
+}
+
+[data-theme="light"] .composer .input-wrap:focus-within {
+  background: #FFFFFF !important;
+  box-shadow: 0 2px 12px rgba(0, 168, 132, 0.15) !important;
+}
+
+/* 3. The Text inside */
+.composer input {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  font-size: 16px !important;
+  color: var(--text) !important;
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+.composer input::placeholder {
+  color: var(--text-dim) !important;
+  font-weight: 400 !important;
+}
+
+/* 4. The Icons (Emoji & Attach) */
+.composer .icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: transparent !important;
+  fill: var(--text-muted) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  transition: background 0.2s, fill 0.2s !important;
+}
+
+.composer .icon:hover {
+  background: var(--hover) !important;
+  fill: var(--user-accent-1) !important;
+}
+
+/* 5. The Send / Mic Button */
+.composer .send-btn {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  background: #00A884 !important; /* Vibrant Green */
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3) !important;
+  transition: transform 0.15s ease !important;
+}
+
+.composer .send-btn:active {
+  transform: scale(0.92) !important;
+}
+
+.composer .send-btn svg {
+  fill: #ffffff !important;
+  width: 22px !important;
+  height: 22px !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   ISOLATED FLOATING INPUT ELEMENTS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Make the main container completely transparent to remove the "held together" look */
+.composer {
+  background: transparent !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  padding: 10px 8px !important;
+  gap: 12px !important; /* Adds breathing room between isolated elements */
+}
+
+/* 2. The Input Pill (Floating white box, no green border) */
+.composer .input-wrap {
+  flex: 1 !important;
+  min-width: 0 !important;
+  background: #FFFFFF !important; /* Solid white */
+  border-radius: 999px !important; /* Perfect curve */
+  padding: 0 18px !important;
+  height: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+  border: none !important; /* Removes the green border completely */
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08) !important; /* Soft shadow to isolate it */
+  transition: box-shadow 0.2s ease !important;
+}
+
+/* Dark mode adjustment for the input */
+[data-theme="dark"] .composer .input-wrap,
+[data-theme="neon"] .composer .input-wrap {
+  background: #2A3942 !important;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.3) !important;
+}
+
+/* 3. The Icons (Emoji & Paperclip) - Isolated */
+.composer .icon {
+  background: #FFFFFF !important; /* White circle background */
+  border-radius: 50% !important;
+  width: 46px !important;
+  height: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08) !important; /* Same shadow as input */
+  fill: #54656F !important;
+  border: none !important;
+  flex-shrink: 0 !important;
+}
+
+/* Dark mode adjustment for icons */
+[data-theme="dark"] .composer .icon,
+[data-theme="neon"] .composer .icon {
+  background: #2A3942 !important;
+  fill: #8696A0 !important;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.3) !important;
+}
+
+/* 4. The Send / Mic Button - Isolated */
+.composer .send-btn {
+  background: #00A884 !important;
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: none !important;
+  box-shadow: 0 3px 12px rgba(0, 168, 132, 0.25) !important;
+  transition: transform 0.15s ease !important;
+}
+
+.composer .send-btn:active {
+  transform: scale(0.92) !important;
+}
+
+.composer .send-btn svg {
+  fill: #FFFFFF !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   ISOLATED PREMIUM PANEL (NO GREEN BORDER)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. The Main Bar - Completely Isolated from the Chat Background */
+.composer {
+  background: var(--bg-panel) !important; /* Solid white in light mode, dark grey in dark mode */
+  border-top: 1px solid var(--border-light) !important;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06) !important; /* Shadow to lift it off the page */
+  padding: 10px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+}
+
+/* 2. The Input Field - No border, distinct background */
+.composer .input-wrap {
+  flex: 1 !important;
+  min-width: 0 !important;
+  background: var(--bg-main) !important; /* Soft grey to contrast with the white panel */
+  border: none !important; /* Kills the green border */
+  outline: none !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.04) !important; /* Gives it a "recessed" look */
+  border-radius: 999px !important; /* Perfect pill */
+  padding: 0 18px !important;
+  height: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+[data-theme="light"] .composer .input-wrap {
+  background: #F0F2F5 !important; /* WhatsApp light grey */
+}
+
+[data-theme="dark"] .composer .input-wrap,
+[data-theme="neon"] .composer .input-wrap {
+  background: var(--bg-main) !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Remove ANY focus outlines that cause the green box */
+.composer .input-wrap:focus,
+.composer .input-wrap:focus-within,
+.composer input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.04) !important; /* Keeps the recessed look even when typing */
+}
+
+[data-theme="dark"] .composer .input-wrap:focus-within {
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* 3. Text Input */
+.composer input {
+  background: transparent !important;
+  color: var(--text) !important;
+  font-size: 16px !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.composer input::placeholder {
+  color: var(--text-dim) !important;
+}
+
+/* 4. The Icons (Emoji & Paperclip) - Standalone, no background */
+.composer .icon {
+  background: transparent !important;
+  box-shadow: none !important;
+  fill: var(--text-muted) !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background 0.2s !important;
+}
+
+.composer .icon:hover,
+.composer .icon:active {
+  background: var(--bg-main) !important; /* Only shows a subtle circle when tapped */
+}
+
+/* 5. The Send / Mic Button */
+.composer .send-btn {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 50% !important;
+  background: #00A884 !important; /* Vibrant Green */
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: none !important;
+  box-shadow: 0 4px 10px rgba(0, 168, 132, 0.25) !important;
+}
+
+.composer .send-btn:active {
+  transform: scale(0.92) !important;
+}
+
+.composer .send-btn svg {
+  fill: #FFFFFF !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   FULLY TRANSPARENT BOTTOM BAR (NO ASSOCIATED BAR COLOR)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Remove the background from the main container completely */
+.composer {
+  background: transparent !important; 
+  border-top: none !important;
+  box-shadow: none !important; 
+  padding: 10px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+}
+
+/* 2. The Input Pill (Floating White) */
+.composer .input-wrap {
+  flex: 1 !important;
+  min-width: 0 !important;
+  background: #FFFFFF !important; 
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08) !important; /* Shadow so it stands out against the beige */
+  border-radius: 999px !important;
+  padding: 0 18px !important;
+  height: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Kill the green border when typing */
+.composer .input-wrap:focus,
+.composer .input-wrap:focus-within,
+.composer input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.composer input {
+  background: transparent !important;
+  color: #111B21 !important;
+  font-size: 16px !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* 3. The Emoji & Paperclip (Floating White Circles) */
+.composer .icon {
+  background: #FFFFFF !important;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 50% !important;
+  width: 46px !important;
+  height: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  fill: #54656F !important; /* Dark grey icon */
+  transition: transform 0.2s !important;
+}
+
+.composer .icon:active {
+  transform: scale(0.92) !important;
+}
+
+/* 4. The Send / Mic Button */
+.composer .send-btn {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 50% !important;
+  background: #00A884 !important; /* WhatsApp Green */
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 168, 132, 0.3) !important;
+}
+
+.composer .send-btn:active {
+  transform: scale(0.92) !important;
+}
+
+.composer .send-btn svg {
+  fill: #FFFFFF !important;
+}
+
+/* --- DARK MODE ADJUSTMENTS --- */
+[data-theme="dark"] .composer .input-wrap,
+[data-theme="dark"] .composer .icon,
+[data-theme="neon"] .composer .input-wrap,
+[data-theme="neon"] .composer .icon {
+  background: #2A3942 !important; /* Dark grey floating capsules */
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3) !important;
+}
+[data-theme="dark"] .composer input,
+[data-theme="neon"] .composer input {
+  color: #E9EDEF !important;
+}
+[data-theme="dark"] .composer .icon,
+[data-theme="neon"] .composer .icon {
+  fill: #8696A0 !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   PREMIUM STATUS PALETTE
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Fix the Header & Overlay */
+.status-page-overlay {
+  background: var(--bg-main) !important; /* Match app background */
+}
+
+.status-page-header {
+  background: var(--bg-panel) !important;
+  border-bottom: 1px solid var(--border-light) !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05) !important;
+  padding: 16px 20px !important;
+}
+
+.status-page-header h2 {
+  color: var(--text) !important; /* Fixes invisible text */
+  font-size: 20px !important;
+  font-weight: 700 !important;
+}
+
+/* 2. The Grid Layout */
+.status-palette-container {
+  padding: 20px;
+  animation: fadeIn 0.3s var(--ease);
+}
+
+.status-section-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)) !important;
+  gap: 16px !important;
+  width: 100% !important;
+}
+
+/* 3. The Status Cards (Square/Rounded Palette look) */
+.status-card {
+  width: 100% !important;
+  height: 160px !important;
+  border-radius: 16px !important;
+  background: var(--bg-panel) !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08) !important;
+  border: 1px solid var(--border-light) !important;
+  transition: transform 0.2s !important;
+}
+
+.status-card:active {
+  transform: scale(0.95) !important;
+}
+
+/* Add Status Card (Dashed Border for empty state) */
+.add-status-card {
+  border: 2px dashed var(--user-accent-1) !important;
+  background: var(--user-accent-tint) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: none !important;
+}
+
+.add-status-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--user-accent-1);
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 10px rgba(0, 168, 132, 0.3);
+}
+
+/* 4. Card Image & Text Overlays */
+.status-card-image {
+  border-radius: 14px !important;
+  overflow: hidden !important;
+}
+
+.status-card-image img, 
+.status-card-image video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.status-card-gradient {
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%) !important;
+}
+
+.status-card-name {
+  bottom: 12px !important;
+  left: 12px !important;
+  right: 12px !important;
+  text-align: left !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+
+/* 5. User Avatar Ring on the Card */
+.status-card-ring {
+  top: 12px !important;
+  left: 12px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border: 2px solid var(--user-accent-2) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+}
+
+/* 6. Remove the old ugly "Close" text */
+.status-close-text {
+  display: none !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   FIX FOR UI OVERLAP / RENDERING CRASH
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Ensure the chat window is strictly hidden and covers everything */
+.chat-window {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 100 !important; /* Higher than everything else */
+  transform: translateX(100%) !important;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.chat-window.active {
+  transform: translateX(0) !important;
+}
+
+/* Ensure the sidebar doesn't try to flex or share space */
+.sidebar {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 10 !important;
+}
+
+/* Status Widget Z-Index (Floats above chat list, but below chat window) */
+.status-floating-widget {
+  z-index: 50 !important;
+  pointer-events: auto !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   UPDATED STATUS WIDGET LAYOUT
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.status-floating-widget {
+  position: absolute;
+  bottom: 85px;
+  left: 16px;
+  width: 280px; /* Slightly wider to fit labels */
+  background: var(--bg-panel);
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  z-index: 50;
+  padding: 12px;
+  border: 1px solid var(--border-light);
+  animation: popIn 0.25s var(--ease);
+}
+
+.sw-list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+
+.sw-list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Group the circle and the text label together */
+.sw-item-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sw-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+  max-width: 56px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.sw-item, .sw-add {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.sw-add {
+  border: 2px dashed var(--user-accent-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--user-accent-1);
+  font-size: 24px;
+  font-weight: bold;
+  background: var(--user-accent-tint);
+  transition: transform 0.2s;
+}
+
+.sw-add:active {
+  transform: scale(0.9);
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   FIX VISIBLE HEADER & CLOSE BUTTON ON STATUS WIDGET
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Force the widget background to be solid so text has contrast */
+.status-floating-widget {
+  background: var(--bg-panel) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid var(--border-light) !important;
+}
+
+/* Make the Title text clearly visible */
+.sw-title {
+  color: var(--text) !important; 
+  font-weight: 800 !important;
+  font-size: 11.5px !important;
+}
+
+/* Make the Close button large, visible, and tappable */
+.sw-close {
+  background: var(--bg-main) !important; /* Soft background */
+  color: var(--text-muted) !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  border: none !important;
+  transition: all 0.2s !important;
+}
+
+/* Turn it red when hovering/tapping */
+.sw-close:hover, 
+.sw-close:active {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+
+/* Ensure the header layout keeps the X on the far right */
+.sw-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin-bottom: 12px !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   PREMIUM STATUS WIDGET BADGES & VIEWER LIST
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Multiple Status Badge on Widget */
+.sw-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: var(--user-accent-1);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-panel);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Eye Icon Button on Viewer */
+.st-viewers-btn {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+.st-viewers-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Viewers List Modal */
+.viewers-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  background: var(--bg-main);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.viewer-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+.viewer-item:last-child {
+  border-bottom: none;
+}
+
+.viewer-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--user-accent-tint);
+  color: var(--user-accent-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+  overflow: hidden;
+}
+.viewer-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.viewer-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   FLOATING STATUS VIEWER CARD
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* The Blurred Background */
+.status-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+  backdrop-filter: blur(8px); /* Blurs the homepage behind it */
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s var(--ease);
+}
+
+/* The Floating Card */
+.status-viewer-card {
+  width: 88%;
+  max-width: 340px; /* Fits nicely on mobile */
+  height: 520px;
+  background: #000;
+  border-radius: 24px; /* Curvy borders */
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  animation: popIn 0.3s var(--ease);
+  display: flex;
+  flex-direction: column;
+}
+
+/* The Media inside the card */
+.status-viewer-card .status-media {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-viewer-card .status-media img,
+.status-viewer-card .status-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Adjusting the internal elements to fit the card */
+.status-viewer-card .status-progress {
+  top: 12px;
+  left: 12px;
+  right: 12px;
+}
+
+.status-viewer-card .status-close {
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.status-viewer-card .st-viewers-btn {
+  top: 20px;
+  left: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.status-viewer-card .status-nav {
+  width: 36px;
+  height: 36px;
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+}
+.status-viewer-card .status-nav.prev { left: 10px; }
+.status-viewer-card .status-nav.next { right: 10px; }
+
+/* Adjusting the reply bar at the bottom of the card */
+.status-viewer-card .status-reply-bar {
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+}
+
+.status-viewer-card .status-reply-bar input {
+  padding: 10px 14px;
+  font-size: 13px;
+}
+
+.status-viewer-card .status-reply-bar button {
+  width: 40px;
+  height: 40px;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   SMALLER STATUS CARD & WHATSAPP REPLY STYLE
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Make the floating card smaller */
+.status-viewer-card {
+  width: 82% !important;
+  max-width: 310px !important; 
+  height: 480px !important;
+  border-radius: 20px !important;
+}
+
+/* WhatsApp-style Status Reply inside the Chat Bubble */
+.status-reply-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 6px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--user-accent-1);
+  cursor: pointer;
+}
+
+[data-theme="dark"] .status-reply-preview {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.status-reply-preview img,
+.status-reply-preview video {
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.status-reply-preview .sr-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--user-accent-1);
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   SMALLER STATUS CARD & WHATSAPP REPLY STYLE
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Make the floating card smaller */
+.status-viewer-card {
+  width: 75% !important;       /* Smaller width */
+  max-width: 280px !important; /* Maximum width */
+  height: 420px !important;    /* Shorter height */
+  border-radius: 18px !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* WhatsApp-style Status Reply inside the Chat Bubble */
+.status-reply-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.15);
+  padding: 6px 8px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--user-accent-1);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+[data-theme="dark"] .status-reply-preview {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.status-reply-preview:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.status-reply-preview img,
+.status-reply-preview video {
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.status-reply-preview .sr-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--user-accent-1);
+}
+/* ═══════════ FIX STATUS REPLY BAR IN SMALLER CARD ═══════════ */
+.status-viewer-card .status-reply-bar {
+  position: absolute;
+  bottom: 12px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.status-viewer-card .status-reply-bar input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.6); /* Dark background so it's readable */
+  backdrop-filter: blur(10px);    /* Frosted glass effect */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  outline: none;
+  font-size: 13px;
+}
+
+.status-viewer-card .status-reply-bar input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.status-viewer-card .status-reply-bar button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--user-accent-1, #00A884);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: none;
+  cursor: pointer;
+}
+
+.status-viewer-card .status-reply-bar button svg {
+  fill: #fff;
+  width: 18px;
+  height: 18px;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   CRYSTAL CLEAR CONTRAST FOR LIGHT MODE HEADERS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Make the Logo vibrant and solid */
+[data-theme="light"] .header h1 {
+  color: var(--user-accent-1) !important; /* Solid Green */
+  opacity: 1 !important;
+}
+
+/* 2. Make the Header Icons (New Group, Dots) dark and crisp */
+[data-theme="light"] .header-icons .icon,
+[data-theme="light"] .header-actions .icon {
+  fill: #1A202C !important; /* Near black */
+  color: #1A202C !important;
+  opacity: 1 !important;
+}
+
+/* 3. Make the Back Arrow dark and visible */
+[data-theme="light"] #back-btn svg {
+  fill: #1A202C !important; 
+  color: #1A202C !important;
+}
+
+/* 4. Make the Status Text (online/offline) darker */
+[data-theme="light"] .chat-header .chat-status {
+  color: #4A5568 !important; /* Dark grey */
+  font-weight: 600 !important;
+}
+
+/* 5. Make the Timer Button darker */
+[data-theme="light"] .timer-btn {
+  color: #4A5568 !important;
+  font-weight: 600 !important;
+}
+
+/* 6. Ensure Dark Mode stays bright and clear too */
+[data-theme="dark"] .header-actions .icon,
+[data-theme="dark"] #back-btn svg,
+[data-theme="dark"] .header-icons .icon {
+  fill: #E9EDEF !important; /* Bright white/grey */
+}
+[data-theme="dark"] .chat-header .chat-status,
+[data-theme="dark"] .timer-btn {
+  color: #AEBAC1 !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   CRITICAL FIX: STOP LAYOUT SQUISHING & ENSURE FULL-SCREEN CHAT
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Force the Chat View to be a solid block */
+#view-chats {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+/* 2. Chat Window strictly covers the whole screen */
+.chat-window {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important; /* Fixes mobile keyboard resizing */
+  z-index: 999 !important; /* Forces it above the chat list */
+  background: var(--bg-main) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transform: translateX(100%) !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.chat-window.active {
+  transform: translateX(0) !important;
+}
+
+/* 3. Hide bottom nav & floating buttons when inside a chat */
+.app-container.chat-open .bottom-nav,
+.app-container.chat-open .explore-fab,
+.app-container.chat-open #floating-status-widget {
+  display: none !important;
+}
+
+/* 4. Slide the sidebar completely out of the way */
+.app-container.chat-open .sidebar {
+  transform: translateX(-100%) !important;
+  transition: transform 0.3s ease !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   FIX EXPLORE BUTTON CLIPPING & BOTTOM NAV
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Ensure the Chat View doesn't clip floating buttons */
+#view-chats {
+  overflow: visible !important; /* Changed from hidden */
+}
+
+/* 2. Lift the Explore button above the bottom nav */
+.explore-fab {
+  position: absolute !important;
+  bottom: 85px !important; /* Lifts it above the 68px bottom nav */
+  right: 20px !important;
+  z-index: 100 !important; /* Forces it to float on top */
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* 3. Make sure the Chat List has padding so the last chat isn't hidden behind the button */
+.chat-list {
+  padding-bottom: 150px !important; 
+}
+
+/* 4. Fix the weird stretched green line on the Bottom Nav */
+.bottom-nav-btn::after {
+  width: 24px !important; /* Makes the line shorter and cleaner */
+  left: 50% !important;
+  transform: translateX(-50%) scaleX(0) !important;
+}
+
+.bottom-nav-btn.active::after {
+  transform: translateX(-50%) scaleX(1) !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   FIX TABS, CLICKS & MINIMALIST MODALS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Force Bottom Nav to be above everything so it never gets blocked */
+.bottom-nav {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+/* 2. Fix the weird stretched green line on the active tab */
+.bottom-nav-btn::after {
+  width: 28px !important; 
+  left: 50% !important;
+  transform: translateX(-50%) scaleX(0) !important;
+}
+.bottom-nav-btn.active::after {
+  transform: translateX(-50%) scaleX(1) !important;
+}
+
+/* 3. Make all pop-up menus smaller */
+.modal {
+  max-width: 310px !important; /* Smaller width */
+  padding: 20px !important;
+  border-radius: 20px !important;
+}
+
+.modal h3 {
+  font-size: 17px !important;
+  margin-bottom: 16px !important;
+}
+
+/* 4. Remove button backgrounds, color the text instead */
+.modal button {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--text) !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  padding: 14px !important;
+  margin-bottom: 4px !important;
+  border-radius: 12px !important;
+  transition: background 0.2s !important;
+}
+
+/* Add a subtle background color ONLY when pressed down */
+.modal button:active, 
+.modal button:hover {
+  background: var(--hover) !important;
+}
+
+/* Color the main action texts */
+.modal .btn-primary {
+  color: var(--user-accent-1) !important; /* Green text */
+  font-weight: 800 !important;
+}
+
+.modal .btn-danger {
+  color: #ef4444 !important; /* Red text */
+  font-weight: 800 !important;
+}
+
+/* Center align the timer options so they look like a clean list */
+.modal .timer-option {
+  text-align: center !important;
+  color: var(--text) !important;
+}
+
+/* Make modal inputs subtle */
+.modal input, .modal textarea {
+  background: var(--bg-main) !important;
+  border: 1px solid var(--border-light) !important;
+  padding: 14px !important;
+  border-radius: 12px !important;
+  font-size: 15px !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   CRITICAL FIX: BRING MODALS TO THE FRONT & DARKEN HEADER ICONS
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Force the pop-up menus to appear ABOVE the chat window */
+.modal-overlay {
+  z-index: 99999 !important; 
+}
+
+/* 2. Make the Header Icons (Back, Search, Dots) dark and crisp in Light Mode */
+[data-theme="light"] .chat-header .icon,
+[data-theme="light"] #back-btn svg,
+[data-theme="light"] .header-actions .icon {
+  fill: #111B21 !important; /* Near black */
+  color: #111B21 !important;
+  opacity: 1 !important;
+}
+
+/* 3. Make the "24 Hours" and "offline" text darker and easier to read */
+[data-theme="light"] .chat-header .chat-status,
+[data-theme="light"] .timer-btn,
+[data-theme="light"] #other-name {
+  color: #111B21 !important; 
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .timer-btn {
+  color: #54656F !important;
+  font-weight: 600 !important;
+}
+
+/* 4. Ensure the avatar circle stands out */
+[data-theme="light"] .chat-header .avatar {
+  background: #E1E8EB !important; 
+  color: #111B21 !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   SMALLER CHAT MENU & PROFILE TAB FIX
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Make the Chat Menu (Pin/Mute) smaller and sleeker */
+.modal {
+  max-width: 260px !important; /* Shrinks the width */
+  padding: 16px !important; /* Reduces padding */
+  border-radius: 16px !important;
+}
+
+.modal h3 {
+  font-size: 16px !important;
+  margin-bottom: 12px !important;
+}
+
+.modal button {
+  padding: 10px !important; /* Reduces button height */
+  font-size: 14px !important;
+  margin-bottom: 2px !important;
+}
+
+/* 2. Force the Profile View to be solid and visible */
+#view-profile {
+  display: none;
+  width: 100%;
+  height: calc(100dvh - 72px) !important; /* Takes up full screen minus bottom nav */
+  background: var(--bg-main) !important; /* Solid background so it's not transparent */
+  overflow-y: auto !important;
+  padding-bottom: 100px;
+}
+
+#view-profile.active {
+  display: block !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   CRITICAL FIX: VIEW SWITCHING & PROFILE DISPLAY
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Force Chat View to hide when NOT active (overrides the previous block fix) */
+#view-chats {
+  display: none !important; 
+}
+#view-chats.active {
+  display: block !important; 
+}
+
+/* 2. Force Profile View to hide when NOT active */
+#view-profile {
+  display: none !important;
+  background: var(--bg-main) !important; /* Ensures it's not transparent */
+  width: 100% !important;
+  height: calc(100dvh - 72px) !important; /* Fill the screen above the bottom nav */
+  z-index: 20 !important;
+}
+#view-profile.active {
+  display: block !important;
+  animation: fadeIn 0.25s var(--ease) !important;
+}
+
+/* 3. Ensure the sidebar doesn't accidentally overflow its container */
+.sidebar {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 10 !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   NEW DEFAULT THEME & RESET BUTTON
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Ensure the inputs are clickable and visible */
+.theme-row input[type="color"] {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  background: transparent;
+}
+
+/* 2. Fix the Reset Button styling (so it doesn't look like a primary button) */
+#reset-theme-btn {
+  background: var(--bg-main) !important;
+  color: #ef4444 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  font-weight: 600 !important;
+  margin-top: 10px !important;
+}
+
+#reset-theme-btn:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* 3. Override any old local storage colors that might be stuck in the CSS */
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PREMIUM APPEARANCE MODAL (REPLACES NATIVE INPUTS)
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 1. Theme Buttons (Light, Dark, Neon) */
+.custom-theme-selector {
+  display: flex !important;
+  gap: 8px;
+  margin-bottom: 24px;
+  background: var(--bg-main);
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+.theme-btn {
+  flex: 1;
+  padding: 10px 0 !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--text-muted) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  transition: all 0.2s !important;
+  margin: 0 !important;
+}
+
+.theme-btn.active {
+  background: var(--bg-panel) !important;
+  color: var(--user-accent-1) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+/* 2. Color Palette (Circles) */
+.custom-color-palette {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: transform 0.2s, border-color 0.2s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.color-swatch:active {
+  transform: scale(0.9);
+}
+
+.color-swatch.active {
+  border-color: var(--text);
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* 3. Clean up any leftover native styles */
+.theme-row {
+  display: none !important; /* Hides the old theme rows */
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   FIX MESSAGE CONTAINER HEIGHT
+   ═══════════════════════════════════════════════════════════════════════ */
+.messages {
+  flex: 1 !important;
+  min-height: 0 !important; /* Prevents flexbox from squishing the messages */
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Ensure the banner stays above everything */
+.in-app-banner {
+  z-index: 99999 !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   FIX MESSAGE CONTAINER HEIGHT & NOTIFICATION BANNER
+   ═══════════════════════════════════════════════════════════════════════ */
+.messages {
+  flex: 1 !important;
+  min-height: 0 !important; /* Prevents flexbox from squishing the messages */
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Force banner to the very top of the screen layer */
+.in-app-banner {
+  z-index: 999999 !important;
+}
+/* ═══════════════════════════════════════════════════════════════════════
+   WHATSAPP STYLE NEW MESSAGE SCROLL BUTTON
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.scroll-bottom-btn {
+  position: absolute !important;
+  bottom: 85px !important;
+  right: 20px !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: var(--bg-panel) !important;
+  color: var(--user-accent-1) !important; /* Green Arrow */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+  border: 1px solid var(--border-light) !important;
+  z-index: 99 !important;
+  cursor: pointer;
+  transition: transform 0.2s !important;
+  animation: popIn 0.2s ease !important;
+}
+
+/* Add a little "New Message" bubble look */
+.scroll-bottom-btn::before {
+  content: "1"; /* Badge count placeholder */
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--user-accent-2);
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-panel);
+}
+
+.scroll-bottom-btn:active {
+  transform: scale(0.9) !important;
+}
+
+.scroll-bottom-btn svg {
+  width: 24px !important;
+  height: 24px !important;
+  fill: currentColor !important;
+}
+
+/* ═══ FIX DISTORTED OVALS IN GROUP INFO ═══ */
+.member-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 8px !important;
+  margin-bottom: 8px !important;
+  background: var(--bg-main) !important;
+  border-radius: 12px !important;
+}
+
+.member-item .avatar {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  flex-shrink: 0 !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  overflow: hidden !important;
+}
+
+/* Fix the main Group Info avatar (the big "G") */
+.modal .avatar-wrap {
+  width: 80px !important;
+  height: 80px !important;
+  min-width: 80px !important;
+  min-height: 80px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+
+/* Fix the Group Name Input field */
+#gi-name {
+  width: 100% !important;
+  padding: 10px 14px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 10px !important;
+  background: var(--bg-main) !important;
+  color: var(--text) !important;
+  font-size: 14px !important;
+  margin-bottom: 12px !important;
+}
+
+/* ═══ FIX SQUISHED HEADER TEXT ═══ */
+.chat-header {
+  height: auto !important; /* Let it expand if needed */
+  min-height: 56px !important;
+  padding: 8px 12px !important;
+}
+
+.chat-header .timer-btn {
+  white-space: nowrap !important; /* Stop "24 Hours" from wrapping */
+  flex-shrink: 0 !important;
+}
+
+.chat-header .chat-status, 
+.chat-header .chat-name {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+/* ═══ SLEEK & COMPACT GROUP INFO MODAL ═══ */
+/* Make the modal smaller and more rounded */
+.modal {
+  max-width: 320px !important; 
+  border-radius: 24px !important;
+  padding: 24px 20px !important;
+}
+
+/* Clean up the member list (remove background colors) */
+.member-item {
+  background: transparent !important;
+  padding: 8px 4px !important;
+  margin-bottom: 0 !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+.member-item:last-child {
+  border-bottom: none !important;
+}
+
+/* Fix the Group Name Input field */
+#gi-name {
+  background: transparent !important;
+  border: 1.5px solid var(--border) !important;
+  border-radius: 14px !important;
+  padding: 8px 12px !important;
+  margin-top: 12px !important;
+  margin-bottom: 16px !important;
+  color: var(--text) !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  transition: border-color 0.2s !important;
+}
+#gi-name:focus {
+  outline: none !important;
+  border-color: var(--user-accent-1) !important;
+}
+
+/* Shrink the big group avatar */
+.modal .avatar-wrap {
+  width: 70px !important;
+  height: 70px !important;
+  min-width: 70px !important;
+  min-height: 70px !important;
+  margin: 0 auto 12px !important;
+  border-radius: 50% !important;
+}
+.modal .avatar-wrap .avatar {
+  font-size: 28px !important;
+}
+
+/* Make the headings and members list look premium */
+.modal h4 {
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  margin: 12px 0 6px 4px !important;
+}
+.member-item .avatar {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  margin-right: 12px !important;
+}
+.member-item span, .member-item div {
+  font-size: 14.5px !important;
+}
+/* ═══ SLEEK & COMPACT NEW GROUP MODAL ═══ */
+/* Target the modal specifically for group creation */
+.modal:has(#g-name) {
+  max-width: 300px !important;
+  border-radius: 20px !important;
+  padding: 20px 16px !important;
+}
+
+/* Beautiful modern inputs */
+#g-name, #g-search {
+  width: 100% !important;
+  padding: 10px 14px !important;
+  background: var(--bg-main) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  color: var(--text) !important;
+  font-size: 14px !important;
+  outline: none !important;
+  margin-bottom: 10px !important;
+  transition: border-color 0.2s !important;
+}
+#g-name:focus, #g-search:focus {
+  border-color: var(--user-accent-1) !important;
+}
+
+/* Fix the ovals! */
+.user-select-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px 10px !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  border: 1px solid transparent !important;
+  transition: background 0.2s !important;
+}
+.user-select-item:hover {
+  background: rgba(128, 128, 128, 0.05) !important;
+}
+.user-select-item.selected {
+  background: rgba(0, 168, 132, 0.1) !important;
+  border-color: var(--user-accent-1) !important;
+}
+
+/* Force avatars to be perfect circles */
+.user-select-item .avatar {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--border) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  flex-shrink: 0 !important;
+}
+.user-select-item .avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Make the list scrollable if many users */
+#g-list {
+  max-height: 160px !important;
+  overflow-y: auto !important;
+  margin-bottom: 12px !important;
+}
+
+/* Clean up buttons in this modal */
+.modal:has(#g-name) button {
+  width: 100% !important;
+  padding: 12px !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  margin: 4px 0 0 0 !important;
+}
+/* ═══ FORCE COMPACT MODALS & FIX MENUS ═══ */
+
+/* Make the message popup VERY small and clean */
+.msg-menu-overlay .modal {
+  max-width: 220px !important; 
+  padding: 8px !important;
+  border-radius: 16px !important;
+}
+
+.msg-menu-overlay .emoji-picker {
+  margin-bottom: 8px !important;
+}
+.msg-menu-overlay .emoji-picker span {
+  font-size: 24px !important;
+  cursor: pointer !important;
+}
+
+/* Action list styling */
+.menu-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Force transparent backgrounds on the text buttons */
+.menu-action-btn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 12px 8px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--text) !important;
+  text-align: center !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: background 0.2s !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.menu-action-btn:hover, 
+.menu-action-btn:active {
+  background: rgba(128, 128, 128, 0.15) !important;
+}
+
+.menu-action-btn.text-danger {
+  color: #ef4444 !important;
+}
+
+.menu-action-btn.text-muted {
+  color: var(--text-muted) !important;
+  margin-top: 4px !important;
+}
+
+/* Fix header spacing for the 2 new buttons */
+.chat-header .header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+/* ═══ FIX MESSAGE MENU POPUP ═══ */
+.msg-menu-overlay .modal {
+  max-width: 220px !important;
+  padding: 12px !important;
+  border-radius: 16px !important;
+  background: var(--bg-main) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+}
+
+.msg-menu-overlay .emoji-picker {
+  display: flex !important;
+  justify-content: space-between !important;
+  background: transparent !important;
+  padding: 0 0 10px 0 !important;
+  margin-bottom: 10px !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.msg-menu-overlay .emoji-picker span {
+  font-size: 22px !important;
+  cursor: pointer !important;
+}
+
+.menu-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.menu-action-btn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 10px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--text) !important;
+  text-align: center !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: background 0.2s !important;
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.menu-action-btn:hover, 
+.menu-action-btn:active {
+  background: rgba(128, 128, 128, 0.15) !important;
+}
+
+.menu-action-btn.text-danger {
+  color: #ef4444 !important;
+}
+
+.menu-action-btn.text-muted {
+  color: var(--text-muted) !important;
+}
+
+.chat-header .header-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0px !important;
+}
+/* ═══ FIX MESSAGE MENU POPUP & GLITCH ═══ */
+/* Force all menu buttons to have no background, borders, or outlines */
+.menu-action-btn {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  padding: 12px !important;
+  font-size: 14.5px !important;
+  font-weight: 500 !important;
+  color: var(--text) !important;
+  text-align: center !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  margin: 0 !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Subtle highlight when tapping */
+.menu-action-btn:active, 
+.menu-action-btn:hover {
+  background: rgba(128, 128, 128, 0.15) !important;
+}
+
+.menu-action-btn.text-danger {
+  color: #ef4444 !important;
+}
+
+.menu-action-btn.text-muted {
+  color: var(--text-muted) !important;
+  border-top: 1px solid var(--border) !important;
+  border-radius: 0 0 16px 16px !important;
+  margin-top: 6px !important;
+}
+
+/* Stop text from being selected when long-pressing (fixes the native Copy bar) */
+.bubble, .msg-meta, .menu-action-btn, .emoji-picker {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
